@@ -9,9 +9,14 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 
-public interface CustomFileInterface<T extends CustomFileInterface<T>> {
+public interface CustomFile<T extends CustomFile<T>> {
+    FileSettings getFileSettings();
+    /**
+     * the path to the file - including the extension ex. usr/config/custom-file.json
+     */
+    Path getFilePath();
 
     void reset();
 
@@ -19,10 +24,10 @@ public interface CustomFileInterface<T extends CustomFileInterface<T>> {
      * saves the current instance to file
      */
     default void save() {
-        if (!Files.exists(getFile().toPath())) {
-            log(String.format("Creating new `%s`", getFile().getName()));
-        }
-        try (BufferedWriter writer = Files.newBufferedWriter(getFile().toPath(), StandardCharsets.UTF_8)) {
+        if (!Files.exists(getFilePath())) log("Creating new `{}`", getFilePath().getFileName());
+        File file = getFile();
+
+        try (BufferedWriter writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)) {
             writer.write(getFileSettings().getGson().toJson(this));
         }
         // if the file doesn't exist at this stage it would be because of a bad directory, try fileNotExist() to create the directory
@@ -30,16 +35,24 @@ public interface CustomFileInterface<T extends CustomFileInterface<T>> {
             fileNotExist();
         }
         catch (Exception e) {
-            error(String.format("There was an error saving '%s`: %s", getFile().getName(), e.getMessage()));
+            error(String.format("There was an error saving '%s`: %s", file.getName(), e.getMessage()));
         }
     }
 
     /**
-     * loads the file to the current instance using updateFromReader()
+     * overload of {@link #load(boolean)} but with save after loading turned on by default
      */
     default void load() {
+        load(true);
+    }
+
+    /**
+     * loads the file to the current instance using updateFromReader()
+     * @param save weather or not to save after loading, will get rid of bad data that wasn't able to load
+     */
+    default void load(boolean save) {
+        if (!Files.exists(getFilePath())) fileNotExist();
         File file = getFile();
-        if (!Files.exists(getFile().toPath())) fileNotExist();
 
         // try reading the file
         try (BufferedReader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
@@ -51,10 +64,10 @@ public interface CustomFileInterface<T extends CustomFileInterface<T>> {
         }
         // cant load for some reason
         catch (Exception e) {
-            error(String.format("ERROR LOADING '%s': %s", file.getName(),e.getMessage()));
+            error("ERROR LOADING '{}': {}", file.getName(),e.getMessage());
         }
-        // save after loading
-        save();
+        // save after loading (if enabled)
+        if (save) save();
     }
 
     default void updateFromReader(BufferedReader reader) {
@@ -79,6 +92,10 @@ public interface CustomFileInterface<T extends CustomFileInterface<T>> {
         }
     }
 
+    default File getFile() {
+        return getFilePath().toFile();
+    }
+
     /**
      * @return the class of the File
      */
@@ -101,7 +118,7 @@ public interface CustomFileInterface<T extends CustomFileInterface<T>> {
     default void fileNotExist() {
         // try to make the config directory
         try {
-            Files.createDirectories(Paths.get(getDirectory()));
+            Files.createDirectories(getFilePath().getParent().getFileName());
         } catch (Exception e) {
             error("Failed to create config directory. Canceling all config loading...");
             return;
@@ -110,30 +127,28 @@ public interface CustomFileInterface<T extends CustomFileInterface<T>> {
     }
 
     /**
-     * gets the file name - including the extension
-     * @return ex. custom-file.json
+     * logs info to the console if a logger is provided (via {@link FileSettings})
      */
-    String getFileName();
-
-    String getDirectory();
-
-    default File getFile() {
-        return new File(getDirectory()+getFileName());
-    }
-
-    default FileSettings getFileSettings() {
-        return new FileSettings();
-    }
-
-    default void log(String string) {
+    private void log(String string, Object args) {
         if (getFileSettings().isLogging()) {
-            getFileSettings().getLogger().info(string);
+            getFileSettings().getLogger().info(string, args);
         }
     }
 
-    default void error(String string) {
+    /**
+     * logs an error to the console if a logger is provided (via {@link FileSettings})
+     */
+    private void error(String format, Object... args) {
         if (getFileSettings().isLogging()) {
-            getFileSettings().getLogger().severe(string);
+            getFileSettings().getLogger().error(format,args);
         }
     }
+
+    @Override
+    boolean equals(Object obj);
+
+    @Override
+    int hashCode();
+
+    T clone();
 }

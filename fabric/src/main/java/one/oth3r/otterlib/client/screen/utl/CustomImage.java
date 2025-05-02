@@ -1,4 +1,4 @@
-package one.oth3r.fabricTest.client.screen.utl;
+package one.oth3r.otterlib.client.screen.utl;
 
 import net.minecraft.util.Identifier;
 

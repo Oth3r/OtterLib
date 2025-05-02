@@ -1,4 +1,4 @@
-package one.oth3r.otterlib;
+package one.oth3r.otterlib.base;
 
 public class Num {
 

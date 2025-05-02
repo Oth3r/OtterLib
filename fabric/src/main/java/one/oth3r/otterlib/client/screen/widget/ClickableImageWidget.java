@@ -1,4 +1,4 @@
-package one.oth3r.fabricTest.client.screen.widget;
+package one.oth3r.otterlib.client.screen.widget;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;

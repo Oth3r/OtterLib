@@ -1,4 +1,4 @@
-package one.oth3r.fabricTest.client.screen.widget;
+package one.oth3r.otterlib.client.screen.widget;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -7,11 +7,11 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import one.oth3r.fabricTest.client.screen.utl.CustomImage;
+import one.oth3r.otterlib.client.screen.utl.CustomImage;
 import org.jetbrains.annotations.Nullable;
 
 public class TextureButtonWidget extends ButtonWidget {
-
+    //todo add texture offset
     protected final Identifier texture;
     protected final int textureWidth;
     protected final int textureHeight;

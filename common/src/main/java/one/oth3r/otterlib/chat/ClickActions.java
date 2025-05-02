@@ -1,6 +1,6 @@
 package one.oth3r.otterlib.chat;
 
-public enum ClickAction {
+public enum ClickActions {
     RUN_COMMAND("run_command", 1),
     SUGGEST_COMMAND("suggest_command",2),
     OPEN_URL("open_url",3),
@@ -11,7 +11,7 @@ public enum ClickAction {
     private final String name;
     private final int code;
 
-    ClickAction(String name, int code) {
+    ClickActions(String name, int code) {
         this.name = name;
         this.code = code;
     }

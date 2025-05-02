@@ -1,13 +1,12 @@
-package one.oth3r.fabricTest.client.screen.widget;
+package one.oth3r.otterlib.client.screen.widget;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.widget.ElementListWidget;
-import one.oth3r.fabricTest.client.screen.ConfigScreen;
+import one.oth3r.otterlib.client.screen.ConfigScreen;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigsListWidget extends ElementListWidget<ConfigsListWidget.ConfigEntry> {

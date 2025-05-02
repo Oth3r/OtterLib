@@ -6,6 +6,7 @@
   "mixins": [
   ],
   "client": [
+    "WindowFocusMixin"
   ],
   "injectors": {
     "defaultRequire": 1

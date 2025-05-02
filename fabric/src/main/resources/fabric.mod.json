@@ -3,16 +3,17 @@
   "id": "otterlib",
   "version": "${version}",
   "name": "OtterLib",
-  "description": "",
-  "authors": [],
-  "contact": {},
+  "description": "A simple library mod for minecraft, made mostly to develop Oth3r mods easier, but can be used by anyone!",
+  "authors": ["Oth3r"],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/otterlib",
+    "issues": "https://github.com/Oth3r/OtterLib/issues",
+    "sources": "https://github.com/Oth3r/OtterLib"
+  },
   "license": "MIT",
   "icon": "assets/otterlib/icon.png",
   "environment": "*",
   "entrypoints": {
-    "client": [
-      "one.oth3r.otterlib.client.OtterlibClient"
-    ],
     "main": [
       "one.oth3r.otterlib.Otterlib"
     ]
@@ -23,6 +24,6 @@
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
-    "minecraft": "${minecraft_version}"
+    "minecraft": ">=${min_minecraft_version} <=${max_minecraft_version}"
   }
 }

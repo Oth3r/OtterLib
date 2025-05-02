@@ -7,3 +7,9 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
+
+include('fabric', 'common')
+// tests
+include('fabric-test')
+

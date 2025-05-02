@@ -1,4 +1,4 @@
-package one.oth3r.fabricTest.client.screen;
+package one.oth3r.otterlib.client.screen;
 
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -8,16 +8,17 @@ import net.minecraft.client.gui.widget.SimplePositioningWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
-import one.oth3r.fabricTest.FabricTest;
-import one.oth3r.fabricTest.client.screen.widget.ClickableImageWidget;
-import one.oth3r.fabricTest.client.screen.widget.TextureButtonWidget;
+import one.oth3r.otterlib.Assets;
+import one.oth3r.otterlib.client.screen.utl.ScreenUtl;
+import one.oth3r.otterlib.client.screen.widget.ClickableImageWidget;
+import one.oth3r.otterlib.client.screen.widget.TextureButtonWidget;
 import one.oth3r.otterlib.file.CustomFile;
 
 import java.net.URI;
 import java.nio.file.Paths;
 
-public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen {
-    protected final Screen parent;
+public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen implements SetParentScreen {
+    protected Screen parent;
     protected T file;
     protected TextureButtonWidget revertButton, resetButton;
 
@@ -32,12 +33,18 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen {
         this.file = file;
     }
 
+    public UnderConstructionScreen(T file) {
+        super(Text.translatable("sit!.screen.config"));
+        this.parent = null;
+        this.file = file;
+    }
+
     @Override
     protected void init() {
         this.layout.getMainPositioner().alignHorizontalCenter();
 
         layout.add(new ClickableImageWidget.Builder(Text.of("Art by @bunnestbun"), this.textRenderer,
-                Identifier.of(FabricTest.MOD_ID, "textures/gui/fox.png"),140,140)
+                Identifier.of(Assets.ID, "textures/gui/under_construction.png"),140,140)
                 .onHover(Text.of("Art by @bunnestbun")).onPress(ConfirmLinkScreen.opening(this, URI.create("https://www.instagram.com/bunnestbun/"))).build());
 
         initActionButtons();
@@ -45,20 +52,19 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen {
 
         this.layout.forEachChild(this::addDrawableChild);
         this.refreshWidgetPositions();
-        updateButtons();
     }
 
     private void initActionButtons() {
         DirectionalLayoutWidget actionLayout = layout.add(DirectionalLayoutWidget.horizontal().spacing(8));
-
-        actionLayout.add(new ButtonWidget.Builder(Text.translatable("sit!.gui.button.file"),
-                (button) -> Util.getOperatingSystem().open(this.file.getFile()))
-                .dimensions(0, 0, 118 ,20).build());
+        // todo lang
+        actionLayout.add(TextureButtonWidget.createIconButton(Text.literal("File"),
+                btn -> Util.getOperatingSystem().open(this.file.getFile()),
+                Identifier.of(Assets.ID,"icon/file")).build());
 
         actionLayout.add(TextureButtonWidget.createIconButton(
                 Text.literal("Folder"),
                 btn -> Util.getOperatingSystem().open(Paths.get(this.file.getFile().getParent())),
-                Identifier.of(FabricTest.MOD_ID,"folder")).build());
+                Identifier.of(Assets.ID,"icon/folder")).build());
 
         resetButton = actionLayout.add(TextureButtonWidget.createIconButton(
                 Text.literal("Reset"),
@@ -67,7 +73,7 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen {
                     this.file.save();
                     updateButtons();
                 },
-                Identifier.of(FabricTest.MOD_ID, "reset_file")).build());
+                Identifier.of(Assets.ID, "icon/file_reset")).build());
 
 
         revertButton = actionLayout.add(TextureButtonWidget.createIconButton(
@@ -76,7 +82,7 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen {
                     this.file.save();
                     updateButtons();
                 },
-                Identifier.of(FabricTest.MOD_ID, "revert_file")).disabled(true).build());
+                Identifier.of(Assets.ID, "icon/revert")).disabled(true).build());
 
 
     }
@@ -102,12 +108,12 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen {
         super.tick();
         tickTime++;
 
-        if (!focused && FabricTest.isFocused()) {
-            System.out.println("check");
+        // update buttons on refocus
+        if (!focused && ScreenUtl.isFocused()) {
             updateButtons();
         }
 
-        focused = FabricTest.isFocused();
+        focused = ScreenUtl.isFocused();
     }
 
     protected void updateButtons() {
@@ -129,10 +135,20 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen {
     protected void refreshWidgetPositions() {
         this.layout.refreshPositions();
         SimplePositioningWidget.setPos(this.layout, this.getNavigationFocus());
+        updateButtons();
     }
 
     @Override
     public void close() {
-        this.client.setScreen(parent);
+        if (parent != null) {
+            this.client.setScreen(parent);
+        } else {
+            super.close();
+        }
+    }
+
+    @Override
+    public void setParentScreen(Screen parent) {
+        this.parent = parent;
     }
 }

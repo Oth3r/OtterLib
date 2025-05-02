@@ -1,15 +1,28 @@
 plugins {
-    id 'fabric-loom' version '1.10-SNAPSHOT'
+    id 'fabric-loom'
     id 'maven-publish'
+    id "me.modmuss50.mod-publish-plugin" version "0.8.4"
+    id "com.gradleup.shadow"
 }
 
 version = project.mod_version
 group = project.maven_group
 
 base {
-    archivesName = project.archives_base_name
+    archivesName = project.file_name_fabric
 }
 
+sourceSets {
+    // Define a new sourceSet for the common code
+    main {
+        java {
+            srcDir '../common/src/main/java'
+        }
+        resources {
+            srcDir '../common/src/main/resources'
+        }
+    }
+}
 
 repositories {
     // Add repositories to retrieve artifacts from in here.
@@ -26,18 +39,24 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+//    modImplementation sourceSets.common.output
 }
 
 processResources {
-    inputs.property "version", project.version
-    inputs.property "minecraft_version", project.minecraft_version
-    inputs.property "loader_version", project.loader_version
-    filteringCharset "UTF-8"
+    filteringCharset = "UTF-8"
 
+    var replaceProperties = [
+            version                : project.version,
+            minecraft_version      : minecraft_version,
+            min_minecraft_version  : min_minecraft_version,
+            max_minecraft_version  : max_minecraft_version,
+            loader_version         : loader_version
+    ]
+
+    inputs.properties replaceProperties
     filesMatching("fabric.mod.json") {
-        expand "version": project.version,
-                "minecraft_version": project.minecraft_version,
-                "loader_version": project.loader_version
+        expand replaceProperties
     }
 }
 
@@ -70,11 +89,26 @@ jar {
     }
 }
 
+shadowJar {
+    from sourceSets.main.output
+//    from sourceSets.main.output
+//    from sourceSets.client.output
+    configurations = [project.configurations.shadow]
+//    //exclude("META-INF")
+    minimize()
+}
+
+remapJar {
+    dependsOn(shadowJar)
+    mustRunAfter(shadowJar)
+    inputFile = file(shadowJar.archiveFile)
+}
+
 // configure the maven publication
 publishing {
     publications {
         create("mavenJava", MavenPublication) {
-            artifactId = project.archives_base_name
+            artifactId = project.file_name_fabric
             from components.java
         }
     }
@@ -85,5 +119,38 @@ publishing {
         // Notice: This block does NOT have the same function as the block in the top level.
         // The repositories here will be used for publishing your artifact, not for
         // retrieving dependencies.
+    }
+}
+
+publishMods {
+    changelog = file('../changelog.md').text
+    type = BETA
+
+    file = remapJar.archiveFile
+    modLoaders.add("fabric")
+    modLoaders.add("quilt")
+
+    version = mod_version
+    displayName = mod_version+" [Fabric]"
+
+    curseforge {
+        accessToken = env.fetchOrNull('CURSEFORGE')
+        projectId = "1257159"
+        projectSlug = "otterlib"
+        minecraftVersions.addAll(minecraft_versions.split(",").toList())
+
+        requires("fabric-api")
+
+        announcementTitle = "Download from CurseForge"
+    }
+
+    modrinth {
+        accessToken = env.fetchOrNull('MODRINTH')
+        projectId = "zVVpzurY"
+        minecraftVersions.addAll(minecraft_versions.split(",").toList())
+
+        requires("fabric-api")
+
+        announcementTitle = "Download from Modrinth"
     }
 }

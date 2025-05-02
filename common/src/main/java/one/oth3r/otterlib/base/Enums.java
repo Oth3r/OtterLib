@@ -1,4 +1,4 @@
-package one.oth3r.otterlib;
+package one.oth3r.otterlib.base;
 
 import java.util.*;
 import java.util.function.BiFunction;
