@@ -12,6 +12,7 @@ base {
 
 
 repositories {
+    mavenLocal()
     maven { url = "https://maven.terraformersmc.com/releases/" }
 }
 
@@ -23,7 +24,7 @@ dependencies {
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    modImplementation files("../fabric/build/libs/otterlib-fabric-${project.otterlib_version}.jar")
+    modImplementation "one.oth3r.maven:otterlib:${project.otterlib_version}"
 
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 }
