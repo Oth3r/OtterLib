@@ -33,8 +33,8 @@ public class ConfigScreen extends Screen implements SetClientScreen {
      * @param fileButtons a list of buttons - should be 30px tall.
      * @param footer a list of buttons to show in the footer of the screen - should include one {@link SimpleButton.Templates#done(CTxT)} / {@link SimpleButton.Close} button to close the screen
      */
-    public ConfigScreen(Screen parent, @NotNull Text title, @NotNull CustomImage customImage, @NotNull List<SimpleButton> fileButtons, List<SimpleButton> footer) {
-        super(title);
+    public ConfigScreen(Screen parent, @NotNull CTxT title, @NotNull CustomImage customImage, @NotNull List<SimpleButton> fileButtons, List<SimpleButton> footer) {
+        super(title.b());
         this.parent = parent;
         this.customImage = customImage;
         this.layout = new ThreePartsLayoutWidget(this,HEADER_HEIGHT+customImage.getHeight(),FOOTER_HEIGHT);
@@ -49,8 +49,8 @@ public class ConfigScreen extends Screen implements SetClientScreen {
      * @param fileButtons a list of buttons - should be 30px tall.
      * @param footer a list of buttons to show in the footer of the screen - should include one {@link SimpleButton.Templates#done(CTxT)} / {@link SimpleButton.Close} button to close the screen
      */
-    public ConfigScreen(Screen parent, @NotNull Text title, @NotNull List<SimpleButton> fileButtons, List<SimpleButton> footer) {
-        super(title);
+    public ConfigScreen(Screen parent, @NotNull CTxT title, @NotNull List<SimpleButton> fileButtons, List<SimpleButton> footer) {
+        super(title.b());
         this.parent = parent;
         this.customImage = null;
         this.layout = new ThreePartsLayoutWidget(this,HEADER_HEIGHT,FOOTER_HEIGHT);
