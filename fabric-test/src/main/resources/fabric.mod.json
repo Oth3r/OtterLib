@@ -14,7 +14,8 @@
   "environment": "*",
   "entrypoints": {
     "client": ["one.oth3r.fabricTest.client.FabricTestClient"],
-    "main": ["one.oth3r.fabricTest.FabricTest"]
+    "main": ["one.oth3r.fabricTest.FabricTest"],
+    "modmenu": ["one.oth3r.fabricTest.client.ModMenu"]
   },
 
   "mixins": [

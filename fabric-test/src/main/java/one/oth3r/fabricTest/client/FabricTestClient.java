@@ -3,6 +3,7 @@ package one.oth3r.fabricTest.client;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
@@ -25,25 +26,28 @@ public class FabricTestClient implements ClientModInitializer {
         register();
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (keyBinding.wasPressed()) {
-
-                client.setScreen(new ConfigScreen(client.currentScreen, Text.of("test"),
-                        new CustomImage(Identifier.of(FabricTest.MOD_ID, "textures/gui/banner.png"),240, 60),
-                        List.of(
-                                SimpleButton.Templates.fileEditor(new CTxT("Test File"), FabricTest.testFile, new CustomImage(Identifier.of(FabricTest.MOD_ID, "button/server_button"),246,26)).build(),
-                                SimpleButton.Templates.fileEditor(new CTxT("Test File No Image"), FabricTest.testFile).build(),
-                                SimpleButton.Templates.wiki(new CTxT("Help")).openLink("https://oth3r.one").size(30,30).build(),
-                                SimpleButton.Templates.wiki(new CTxT("Help")).openLink("https://oth3r.one").size(30,30).build(),
-                                SimpleButton.Templates.warning(new CTxT("Help")).openLink("https://oth3r.one").size(150,15).hideText(false).build()
-                        ),
-                        List.of(
-                                new SimpleButton.Builder(new CTxT("Donate"))
-                                        .miniIcon(new CustomImage(Identifier.of(Assets.ID, "icon/donate"),15,15)).build(),
-                                SimpleButton.Templates.donate(new CTxT("Donate")).openLink(URI.create("https://ko-fi.com/oth3r")).build(),
-                                SimpleButton.Templates.done(new CTxT("Done")).build(),
-                                SimpleButton.Templates.wiki(new CTxT("Wiki")).openLink("https://oth3r.one").build()
-                        )));
+                client.setScreen(getConfigScreen(client.currentScreen));
             }
         });
+    }
+
+    public static Screen getConfigScreen(Screen parent) {
+        return new ConfigScreen(parent, Text.of("test"),
+                new CustomImage(Identifier.of(FabricTest.MOD_ID, "textures/gui/banner.png"),240, 60),
+                List.of(
+                        SimpleButton.Templates.fileEditor(new CTxT("Test File"), FabricTest.testFile, new CustomImage(Identifier.of(FabricTest.MOD_ID, "button/server_button"),246,26)).build(),
+                        SimpleButton.Templates.fileEditor(new CTxT("Test File No Image"), FabricTest.testFile).build(),
+                        SimpleButton.Templates.wiki(new CTxT("Help")).openLink("https://oth3r.one").size(30,30).build(),
+                        SimpleButton.Templates.wiki(new CTxT("Help")).openLink("https://oth3r.one").size(30,30).build(),
+                        SimpleButton.Templates.warning(new CTxT("Help")).openLink("https://oth3r.one").size(150,15).hideText(false).build()
+                ),
+                List.of(
+                        new SimpleButton.Builder(new CTxT("Donate"))
+                                .miniIcon(new CustomImage(Identifier.of(Assets.ID, "icon/donate"),15,15)).build(),
+                        SimpleButton.Templates.donate(new CTxT("Donate")).openLink(URI.create("https://ko-fi.com/oth3r")).build(),
+                        SimpleButton.Templates.done(new CTxT("Done")).build(),
+                        SimpleButton.Templates.wiki(new CTxT("Wiki")).openLink("https://oth3r.one").build()
+                ));
     }
 
     private static KeyBinding keyBinding;
