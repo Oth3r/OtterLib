@@ -25,5 +25,19 @@
     "fabricloader": ">=${loader_version}",
     "fabric": "*",
     "minecraft": ">=${min_minecraft_version} <=${max_minecraft_version}"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://oth3r.one/discord"
+      },
+      "badges": [ "library" ]
+    }
+  },
+  "modmenu": {
+    "links": {
+      "modmenu.discord": "https://oth3r.one/discord"
+    },
+    "badges": [ "library" ]
   }
 }
