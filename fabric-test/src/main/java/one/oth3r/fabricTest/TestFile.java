@@ -15,7 +15,7 @@ import java.util.Objects;
 public class TestFile implements CustomFile<TestFile> {
 
     @SerializedName("version")
-    private double version = 1.0;
+    private double version = 1.1;
     @SerializedName("test-boolean")
     private Boolean test = true;
     @SerializedName("string")
@@ -45,6 +45,7 @@ public class TestFile implements CustomFile<TestFile> {
 
     @Override
     public void copyFileData(TestFile testFile) {
+        this.version = testFile.version;
         this.test = testFile.test;
         this.string = testFile.string;
     }
@@ -52,9 +53,11 @@ public class TestFile implements CustomFile<TestFile> {
     @Override
     public void update(JsonElement jsonElement) {
         JsonObject file = jsonElement.getAsJsonObject();
-        if (file.get("version").getAsDouble() == 1.0) {
+        // can do both ways
+//        if (file.get("version").getAsDouble() == 1.0) {
+        if (this.version == 1.0) {
             this.version = 1.1;
-            this.test = file.get("test-bool").getAsBoolean();
+            this.test = !file.get("test-boolean").getAsBoolean();
         }
     }
 
