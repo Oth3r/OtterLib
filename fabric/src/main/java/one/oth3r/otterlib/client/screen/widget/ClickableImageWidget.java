@@ -17,7 +17,7 @@ public class ClickableImageWidget extends ButtonWidget {
     private final Text hoverText;
     private final TextRenderer textRenderer;
 
-    private long hoverTime = 0;
+    private float hoverTime = 0;
 
     public ClickableImageWidget(int x, int y, int width, int height, Text text, TextRenderer textRenderer, Identifier image, PressAction onPress, Text hoverText) {
         super(x, y, width, height, text, onPress, Supplier::get);
@@ -41,26 +41,28 @@ public class ClickableImageWidget extends ButtonWidget {
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         context.drawTexture(RenderLayer::getGuiTextured, image,
                 this.getX(), this.getY(), 0.0f, 0.0f, this.getWidth(), this.getHeight(), this.getWidth(), this.getHeight());
-        int toolTipHeight;
+
+        float maxTime = 2.0f; // 2 second long animation
+
         if (canHover()) {
-            this.hoverTime++;
-            toolTipHeight = 20;
-            if (this.hoverTime <= 40) {
-                toolTipHeight = (int) (this.hoverTime/2);
+            hoverTime = Math.min(hoverTime + delta, maxTime);
+        } else if (hoverTime > 0f) {
+            hoverTime = Math.max(hoverTime - delta, 0f);
+        }
+
+        if (hoverTime > 0f) {
+            int toolTipHeight = (int)((hoverTime / maxTime) * 20);
+            int toolTipY = this.getTooltipY(toolTipHeight);
+
+            context.drawTexture(RenderLayer::getGuiTextured, hoverBackground,
+                    getX(), toolTipY, 0.0F, 0.0F, this.getWidth(), toolTipHeight,
+                    this.getWidth(), toolTipHeight);
+
+            if (hoverTime >= maxTime) {
+                drawScrollableText(context, textRenderer, hoverText,
+                        getX() + 4, toolTipY, getX() + this.getWidth() - 4,
+                        toolTipY + toolTipHeight, 0xFFFFFF);
             }
-            int toolTipY = this.getTooltipY(toolTipHeight);
-
-            context.drawTexture(RenderLayer::getGuiTextured, hoverBackground, getX(), toolTipY,0.0F, 0.0F, this.getWidth(), toolTipHeight, this.getWidth(), toolTipHeight);
-
-            // only show the text when animation is done
-            if (this.hoverTime > 40) drawScrollableText(context,textRenderer,hoverText,getX()+4,toolTipY,getX()+this.getWidth()-4,toolTipY+toolTipHeight,16777215);
-        } else if (this.hoverTime != 0) {
-            if (this.hoverTime > 40) this.hoverTime = 40;
-            toolTipHeight = (int) (this.hoverTime/2);
-            int toolTipY = this.getTooltipY(toolTipHeight);
-
-            context.drawTexture(RenderLayer::getGuiTextured, hoverBackground, getX(), toolTipY,0.0F, 0.0F, this.getWidth(), toolTipHeight, this.getWidth(), toolTipHeight);
-            this.hoverTime--;
         }
     }
 
