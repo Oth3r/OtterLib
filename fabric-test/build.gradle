@@ -24,7 +24,7 @@ dependencies {
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    modImplementation "one.oth3r.maven:otterlib:${project.otterlib_version}"
+    modImplementation "one.oth3r:otterlib:${project.otterlib_version}-fabric"
 
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 }
