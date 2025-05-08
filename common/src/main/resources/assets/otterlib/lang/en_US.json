@@ -1,0 +1,13 @@
+{
+  "otterlib.screen.config_manager": "Config Manager",
+
+  "otterlib.gui.config.button.file": "File",
+  "otterlib.gui.config.button.folder": "Folder",
+  "otterlib.gui.config.button.reset": "Reset",
+  "otterlib.gui.config.button.revert": "Revert",
+  "otterlib.gui.config.button.save_close": "Save & Close",
+  "otterlib.gui.config.button.cancel": "Cancel",
+
+
+  "modmenu.descriptionTranslation.otterlib": "A simple library mod for minecraft, made mostly to develop Oth3r mods easier, but can be used by anyone!"
+}
