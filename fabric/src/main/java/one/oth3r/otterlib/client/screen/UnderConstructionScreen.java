@@ -42,10 +42,10 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen imp
     @Override
     protected void init() {
         this.layout.getMainPositioner().alignHorizontalCenter();
-
-        layout.add(new ClickableImageWidget.Builder(Text.of("Art by @bunnestbun"), this.textRenderer,
+        Text text = Text.translatable("otterlib.gui.hover.credit","@bunnestbun");
+        layout.add(new ClickableImageWidget.Builder(text, this.textRenderer,
                 Identifier.of(Assets.ID, "textures/gui/under_construction.png"),140,140)
-                .onHover(Text.of("Art by @bunnestbun")).onPress(ConfirmLinkScreen.opening(this, URI.create("https://www.instagram.com/bunnestbun/"))).build());
+                .onHover(text).onPress(ConfirmLinkScreen.opening(this, URI.create("https://www.instagram.com/bunnestbun/"))).build());
 
         initActionButtons();
         initFooter();

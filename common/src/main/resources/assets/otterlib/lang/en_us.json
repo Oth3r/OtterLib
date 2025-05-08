@@ -1,6 +1,8 @@
 {
   "otterlib.screen.config_manager": "Config Manager",
 
+  "otterlib.gui.hover.credit": "Credit: %s",
+
   "otterlib.gui.config.button.file": "File",
   "otterlib.gui.config.button.folder": "Folder",
   "otterlib.gui.config.button.reset": "Reset",
