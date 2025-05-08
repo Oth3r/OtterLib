@@ -20,24 +20,39 @@ public class ConfigScreen extends Screen implements SetClientScreen {
     protected final Screen parent;
 
     public final ThreePartsLayoutWidget layout;
-    protected final CustomImage customImage;
+    protected final ClickableImageWidget customBanner;
     protected ConfigsListWidget body;
     protected List<SimpleButton> fileButtons;
     protected List<SimpleButton> footer;
 
     /**
-     * creates a config screen with a custom title image
+     * creates a config screen with a custom title image via {@link ClickableImageWidget}
      * @param parent the parent screen
      * @param title the title of the config screen
-     * @param customImage a custom banner at the top of the screen
+     * @param customBanner a custom banner at the top of the screen
      * @param fileButtons a list of buttons - should be 30px tall.
      * @param footer a list of buttons to show in the footer of the screen - should include one {@link SimpleButton.Templates#done(CTxT)} / {@link SimpleButton.Close} button to close the screen
      */
+    public ConfigScreen(Screen parent, @NotNull CTxT title, @NotNull ClickableImageWidget customBanner, @NotNull List<SimpleButton> fileButtons, List<SimpleButton> footer) {
+        super(title.b());
+        this.parent = parent;
+        this.customBanner = customBanner;
+        this.layout = new ThreePartsLayoutWidget(this,HEADER_HEIGHT+customBanner.getHeight(),FOOTER_HEIGHT);
+        this.fileButtons = fileButtons;
+        this.footer = footer;
+    }
+
+    /**
+     * creates a config screen with a custom title image via {@link CustomImage}
+     * deprecated - use {@link #ConfigScreen(Screen, CTxT, ClickableImageWidget, List, List)} instead
+     */
+    @Deprecated(since = "0.1.0.2", forRemoval = true)
     public ConfigScreen(Screen parent, @NotNull CTxT title, @NotNull CustomImage customImage, @NotNull List<SimpleButton> fileButtons, List<SimpleButton> footer) {
         super(title.b());
         this.parent = parent;
-        this.customImage = customImage;
-        this.layout = new ThreePartsLayoutWidget(this,HEADER_HEIGHT+customImage.getHeight(),FOOTER_HEIGHT);
+        this.customBanner = new ClickableImageWidget.Builder(Text.literal("title"), this.textRenderer,
+                customImage.getImage(), customImage.getWidth(), customImage.getHeight()).build();
+        this.layout = new ThreePartsLayoutWidget(this,HEADER_HEIGHT+customBanner.getHeight(),FOOTER_HEIGHT);
         this.fileButtons = fileButtons;
         this.footer = footer;
     }
@@ -52,7 +67,7 @@ public class ConfigScreen extends Screen implements SetClientScreen {
     public ConfigScreen(Screen parent, @NotNull CTxT title, @NotNull List<SimpleButton> fileButtons, List<SimpleButton> footer) {
         super(title.b());
         this.parent = parent;
-        this.customImage = null;
+        this.customBanner = null;
         this.layout = new ThreePartsLayoutWidget(this,HEADER_HEIGHT,FOOTER_HEIGHT);
         this.fileButtons = fileButtons;
         this.footer = footer;
@@ -80,9 +95,8 @@ public class ConfigScreen extends Screen implements SetClientScreen {
     }
 
     private void initHeader() {
-        if (customImage != null) {
-            this.layout.addHeader(new ClickableImageWidget.Builder(Text.literal("title"), this.textRenderer,
-                    customImage.getImage(), customImage.getWidth(), customImage.getHeight()).build());
+        if (customBanner != null) {
+            this.layout.addHeader(customBanner);
         } else {
             this.layout.addHeader(this.title,this.textRenderer);
         }
