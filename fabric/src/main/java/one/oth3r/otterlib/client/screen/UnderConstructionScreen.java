@@ -28,13 +28,13 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen imp
     protected boolean focused = true;
 
     public UnderConstructionScreen(Screen parent, T file) {
-        super(Text.translatable("sit!.screen.config"));
+        super(Text.translatable("otterlib.screen.config_manager"));
         this.parent = parent;
         this.file = file;
     }
 
     public UnderConstructionScreen(T file) {
-        super(Text.translatable("sit!.screen.config"));
+        super(Text.translatable("otterlib.screen.config_manager"));
         this.parent = null;
         this.file = file;
     }
@@ -56,18 +56,17 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen imp
 
     private void initActionButtons() {
         DirectionalLayoutWidget actionLayout = layout.add(DirectionalLayoutWidget.horizontal().spacing(8));
-        // todo lang
-        actionLayout.add(TextureButtonWidget.createIconButton(Text.literal("File"),
+        actionLayout.add(TextureButtonWidget.createIconButton(Text.translatable("otterlib.gui.config.button.file"),
                 btn -> Util.getOperatingSystem().open(this.file.getFile()),
                 Identifier.of(Assets.ID,"icon/file")).build());
 
         actionLayout.add(TextureButtonWidget.createIconButton(
-                Text.literal("Folder"),
+                Text.translatable("otterlib.gui.config.button.folder"),
                 btn -> Util.getOperatingSystem().open(Paths.get(this.file.getFile().getParent())),
                 Identifier.of(Assets.ID,"icon/folder")).build());
 
         resetButton = actionLayout.add(TextureButtonWidget.createIconButton(
-                Text.literal("Reset"),
+                Text.translatable("otterlib.gui.config.button.reset"),
                 btn -> {
                     this.file.reset();
                     this.file.save();
@@ -77,7 +76,7 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen imp
 
 
         revertButton = actionLayout.add(TextureButtonWidget.createIconButton(
-                Text.literal("Revert"),
+                Text.translatable("otterlib.gui.config.button.revert"),
                 btn -> {
                     this.file.save();
                     updateButtons();
@@ -90,12 +89,12 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen imp
     private void initFooter() {
         DirectionalLayoutWidget footerLayout = layout.add(DirectionalLayoutWidget.horizontal().spacing(8));
 
-        footerLayout.add(this.addDrawableChild(new ButtonWidget.Builder(Text.literal("Cancel"),
+        footerLayout.add(this.addDrawableChild(new ButtonWidget.Builder(Text.translatable("otterlib.gui.config.button.save_close"),
                 (button) -> {
                     this.client.setScreen(parent);
                 }).size(140,20).build()));
 
-        footerLayout.add(this.addDrawableChild(new ButtonWidget.Builder(Text.literal("Save & Close"),
+        footerLayout.add(this.addDrawableChild(new ButtonWidget.Builder(Text.translatable("otterlib.gui.config.button.cancel"),
                 (button) -> {
                     this.file.load();
                     this.file.save();
