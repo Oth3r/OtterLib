@@ -1,7 +1,3 @@
-# b0.1.0.1
-* fixed the hovering animation on ClickableImageWidgets
-* added modmenu metadata for quilt and fabric
-* made ConfigScreen use CTxT instead of minecraft Text
-
-# b0.1.0.0
-Initial release of OtterLib!
+# b0.1.1.0
+* added a language file
+* made ConfigScreen able to take a ClickableImageWidget as a banner, deprecating the old method
