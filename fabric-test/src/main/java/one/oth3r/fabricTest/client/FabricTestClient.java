@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import one.oth3r.fabricTest.FabricTest;
 import one.oth3r.otterlib.Assets;
@@ -32,7 +31,7 @@ public class FabricTestClient implements ClientModInitializer {
     }
 
     public static Screen getConfigScreen(Screen parent) {
-        return new ConfigScreen(parent, Text.of("test"),
+        return new ConfigScreen(parent, new CTxT("test"),
                 new CustomImage(Identifier.of(FabricTest.MOD_ID, "textures/gui/banner.png"),240, 60),
                 List.of(
                         SimpleButton.Templates.fileEditor(new CTxT("Test File"), FabricTest.testFile, new CustomImage(Identifier.of(FabricTest.MOD_ID, "button/server_button"),246,26)).build(),
