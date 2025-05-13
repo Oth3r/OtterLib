@@ -1,6 +1,7 @@
 {
   "otterlib.screen.config_manager": "Config Manager",
 
+  "otterlib.gui.screen.title_image": "Title Image",
   "otterlib.gui.hover.credit": "Credit: %s",
 
   "otterlib.gui.config.button.file": "File",
