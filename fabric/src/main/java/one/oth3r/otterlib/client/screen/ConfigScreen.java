@@ -29,7 +29,7 @@ public class ConfigScreen extends Screen implements SetClientScreen {
      * creates a config screen with a custom title image via {@link ClickableImageWidget}
      * @param parent the parent screen
      * @param title the title of the config screen
-     * @param customBanner a custom banner at the top of the screen
+     * @param customBanner a custom banner image at the top of the screen
      * @param fileButtons a list of buttons - should be 30px tall.
      * @param footer a list of buttons to show in the footer of the screen - should include one {@link SimpleButton.Templates#done(CTxT)} / {@link SimpleButton.Close} button to close the screen
      */
@@ -44,15 +44,18 @@ public class ConfigScreen extends Screen implements SetClientScreen {
 
     /**
      * creates a config screen with a custom title image via {@link CustomImage}
-     * deprecated - use {@link #ConfigScreen(Screen, CTxT, ClickableImageWidget, List, List)} instead
+     * @param parent the parent screen
+     * @param title the title of the config screen
+     * @param customBanner a custom banner image at the top of the screen
+     * @param fileButtons a list of buttons - should be 30px tall.
+     * @param footer a list of buttons to show in the footer of the screen - should include one {@link SimpleButton.Templates#done(CTxT)} / {@link SimpleButton.Close} button to close the screen
      */
-    @Deprecated(since = "0.1.0.2", forRemoval = true)
-    public ConfigScreen(Screen parent, @NotNull CTxT title, @NotNull CustomImage customImage, @NotNull List<SimpleButton> fileButtons, List<SimpleButton> footer) {
+    public ConfigScreen(Screen parent, @NotNull CTxT title, @NotNull CustomImage customBanner, @NotNull List<SimpleButton> fileButtons, List<SimpleButton> footer) {
         super(title.b());
         this.parent = parent;
-        this.customBanner = new ClickableImageWidget.Builder(Text.literal("title"), this.textRenderer,
-                customImage.getImage(), customImage.getWidth(), customImage.getHeight()).build();
-        this.layout = new ThreePartsLayoutWidget(this,HEADER_HEIGHT+customBanner.getHeight(),FOOTER_HEIGHT);
+        this.customBanner = new ClickableImageWidget.Builder(new CTxT(Text.translatable("otterlib.gui.screen.title_image")),
+                this.textRenderer, customBanner).build();
+        this.layout = new ThreePartsLayoutWidget(this,HEADER_HEIGHT+ this.customBanner.getHeight(),FOOTER_HEIGHT);
         this.fileButtons = fileButtons;
         this.footer = footer;
     }
