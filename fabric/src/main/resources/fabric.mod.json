@@ -33,11 +33,5 @@
       },
       "badges": [ "library" ]
     }
-  },
-  "modmenu": {
-    "links": {
-      "modmenu.discord": "https://oth3r.one/discord"
-    },
-    "badges": [ "library" ]
   }
 }
