@@ -1,3 +1,5 @@
+# b0.1.2.1
+* fixed hoverText null issue
 # b0.1.2.0
 * fixed modmenu warning in logs
 ### Screens & UI
