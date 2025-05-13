@@ -4,7 +4,6 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import one.oth3r.otterlib.chat.CTxT;
 import one.oth3r.otterlib.client.screen.utl.CustomImage;
@@ -16,7 +15,7 @@ public class ClickableImageWidget extends ButtonWidget {
     private final Identifier hoverBackground = Identifier.ofVanilla("textures/gui/sprites/widget/button_disabled.png");
 
     private final Identifier image;
-    private final Text hoverText;
+    private final CTxT hoverTxT;
     private final TextRenderer textRenderer;
 
     private float hoverTime = 0;
@@ -31,12 +30,12 @@ public class ClickableImageWidget extends ButtonWidget {
      * @param textRenderer the screen's text renderer
      * @param image the image identifier
      * @param onPress the press action of the widget
-     * @param hoverText the text to display when hovering over the widget
+     * @param hoverTxT the text to display when hovering over the widget
      */
-    public ClickableImageWidget(int x, int y, int width, int height, CTxT text, TextRenderer textRenderer, Identifier image, PressAction onPress, CTxT hoverText) {
+    public ClickableImageWidget(int x, int y, int width, int height, CTxT text, TextRenderer textRenderer, Identifier image, PressAction onPress, CTxT hoverTxT) {
         super(x, y, width, height, text.b(), onPress, Supplier::get);
         this.image = image;
-        this.hoverText = hoverText.b();
+        this.hoverTxT = hoverTxT;
         this.textRenderer = textRenderer;
 
         // disable button functionality if there is no press action
@@ -51,12 +50,12 @@ public class ClickableImageWidget extends ButtonWidget {
      * @param textRenderer the screen's text renderer
      * @param customImage the image to display
      * @param onPress the press action of the widget
-     * @param hoverText the text to display when hovering over the widget
+     * @param hoverTxT the text to display when hovering over the widget
      */
-    public ClickableImageWidget(int x, int y, CTxT text, TextRenderer textRenderer, CustomImage customImage, PressAction onPress, CTxT hoverText) {
+    public ClickableImageWidget(int x, int y, CTxT text, TextRenderer textRenderer, CustomImage customImage, PressAction onPress, CTxT hoverTxT) {
         super(x, y, customImage.getWidth(), customImage.getHeight(), text.b(), onPress, Supplier::get);
         this.image = customImage.getImage();
-        this.hoverText = hoverText.b();
+        this.hoverTxT = hoverTxT;
         this.textRenderer = textRenderer;
 
         // disable button functionality if there is no press action
@@ -68,7 +67,7 @@ public class ClickableImageWidget extends ButtonWidget {
     }
 
     private boolean canHover() {
-        return this.hovered && this.hoverText != null;
+        return this.hovered && this.hoverTxT != null;
     }
 
     @Override
@@ -93,7 +92,8 @@ public class ClickableImageWidget extends ButtonWidget {
                     this.getWidth(), toolTipHeight);
 
             if (hoverTime >= maxTime) {
-                drawScrollableText(context, textRenderer, hoverText,
+                assert hoverTxT != null; // cant be null because hovertime only goes up if hoverTxT is not null
+                drawScrollableText(context, textRenderer, hoverTxT.b(),
                         getX() + 4, toolTipY, getX() + this.getWidth() - 4,
                         toolTipY + toolTipHeight, 0xFFFFFF);
             }
