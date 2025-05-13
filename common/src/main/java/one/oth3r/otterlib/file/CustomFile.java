@@ -24,18 +24,17 @@ public interface CustomFile<T extends CustomFile<T>> {
      * saves the current instance to file
      */
     default void save() {
-        if (!Files.exists(getFilePath())) log("Creating new `{}`", getFilePath().getFileName());
+        if (!Files.exists(getFilePath())) {
+            log("Creating new `{}`", getFilePath().getFileName());
+            createDirectory();
+        }
         File file = getFile();
 
         try (BufferedWriter writer = Files.newBufferedWriter(file.toPath(), StandardCharsets.UTF_8)) {
             writer.write(getFileSettings().getGson().toJson(this));
         }
-        // if the file doesn't exist at this stage it would be because of a bad directory, try fileNotExist() to create the directory
-        catch (NoSuchFileException ignored) {
-            fileNotExist();
-        }
         catch (Exception e) {
-            error(String.format("There was an error saving '%s`: %s", file.getName(), e.getMessage()));
+            error(String.format("There was an error saving '%s`: %s", file.getName(), e));
         }
     }
 
@@ -51,20 +50,20 @@ public interface CustomFile<T extends CustomFile<T>> {
      * @param save weather or not to save after loading, will get rid of bad data that wasn't able to load
      */
     default void load(boolean save) {
-        if (!Files.exists(getFilePath())) fileNotExist();
+        if (!Files.exists(getFilePath())) save();
         File file = getFile();
 
         // try reading the file
         try (BufferedReader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
             updateFromReader(reader);
         }
-        // rare, but if the file doesn't exist at this stage, try again
+        // rare, if the file doesn't exist at this stage, save (it should have gotten caught in the first if statement, but sometimes it doesn't)
         catch (NoSuchFileException ignored) {
-            fileNotExist();
+            save();
         }
         // cant load for some reason
         catch (Exception e) {
-            error("ERROR LOADING '{}': {}", file.getName(),e.getMessage());
+            error("ERROR LOADING '{}': {}", file.getName(),e);
         }
         // save after loading (if enabled)
         if (save) save();
@@ -112,18 +111,20 @@ public interface CustomFile<T extends CustomFile<T>> {
      */
     void update(JsonElement json);
 
-    /**
-     * logic for the file not existing when loading, defaults to saving
-     */
+    @Deprecated(since = "0.1.1", forRemoval = true)
     default void fileNotExist() {
-        // try to make the config directory
+        createDirectory();
+    }
+
+    /**
+     * creates the directory that the file is located in
+     */
+    default void createDirectory() {
         try {
-            Files.createDirectories(getFilePath().getParent().getFileName());
+            Files.createDirectories(getFilePath().getParent());
         } catch (Exception e) {
-            error("Failed to create config directory. Canceling all config loading...");
-            return;
+            error("Failed to create config directory... {}", e);
         }
-        save();
     }
 
     /**
