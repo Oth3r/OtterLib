@@ -9,6 +9,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import one.oth3r.otterlib.Assets;
+import one.oth3r.otterlib.chat.CTxT;
+import one.oth3r.otterlib.client.screen.utl.CustomImage;
 import one.oth3r.otterlib.client.screen.utl.ScreenUtl;
 import one.oth3r.otterlib.client.screen.widget.ClickableImageWidget;
 import one.oth3r.otterlib.client.screen.widget.TextureButtonWidget;
@@ -42,9 +44,9 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen imp
     @Override
     protected void init() {
         this.layout.getMainPositioner().alignHorizontalCenter();
-        Text text = Text.translatable("otterlib.gui.hover.credit","@bunnestbun");
+        CTxT text = new CTxT(Text.translatable("otterlib.gui.hover.credit","@bunnestbun"));
         layout.add(new ClickableImageWidget.Builder(text, this.textRenderer,
-                Identifier.of(Assets.ID, "textures/gui/under_construction.png"),140,140)
+                new CustomImage(Identifier.of(Assets.ID, "textures/gui/under_construction.png"),140,140))
                 .onHover(text).onPress(ConfirmLinkScreen.opening(this, URI.create("https://www.instagram.com/bunnestbun/"))).build());
 
         initActionButtons();

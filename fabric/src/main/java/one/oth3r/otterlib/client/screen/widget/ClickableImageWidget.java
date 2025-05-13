@@ -6,6 +6,8 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import one.oth3r.otterlib.chat.CTxT;
+import one.oth3r.otterlib.client.screen.utl.CustomImage;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
@@ -19,10 +21,42 @@ public class ClickableImageWidget extends ButtonWidget {
 
     private float hoverTime = 0;
 
-    public ClickableImageWidget(int x, int y, int width, int height, Text text, TextRenderer textRenderer, Identifier image, PressAction onPress, Text hoverText) {
-        super(x, y, width, height, text, onPress, Supplier::get);
+    /**
+     * creates a clickable image widget
+     * @param x the x position of the widget
+     * @param y the x position of the widget
+     * @param width the width of the image
+     * @param height the height of the image
+     * @param text the button text (hidden)
+     * @param textRenderer the screen's text renderer
+     * @param image the image identifier
+     * @param onPress the press action of the widget
+     * @param hoverText the text to display when hovering over the widget
+     */
+    public ClickableImageWidget(int x, int y, int width, int height, CTxT text, TextRenderer textRenderer, Identifier image, PressAction onPress, CTxT hoverText) {
+        super(x, y, width, height, text.b(), onPress, Supplier::get);
         this.image = image;
-        this.hoverText = hoverText;
+        this.hoverText = hoverText.b();
+        this.textRenderer = textRenderer;
+
+        // disable button functionality if there is no press action
+        if (onPress == null) this.active = false;
+    }
+
+    /**
+     * creates a clickable image widget using a {@link CustomImage}
+     * @param x the x position of the widget
+     * @param y the y position of the widget
+     * @param text the button text (hidden)
+     * @param textRenderer the screen's text renderer
+     * @param customImage the image to display
+     * @param onPress the press action of the widget
+     * @param hoverText the text to display when hovering over the widget
+     */
+    public ClickableImageWidget(int x, int y, CTxT text, TextRenderer textRenderer, CustomImage customImage, PressAction onPress, CTxT hoverText) {
+        super(x, y, customImage.getWidth(), customImage.getHeight(), text.b(), onPress, Supplier::get);
+        this.image = customImage.getImage();
+        this.hoverText = hoverText.b();
         this.textRenderer = textRenderer;
 
         // disable button functionality if there is no press action
@@ -67,14 +101,12 @@ public class ClickableImageWidget extends ButtonWidget {
     }
 
     public static class Builder {
-        private final Text text;
-        private Text hoverText = null;
+        private final CTxT text;
+        private CTxT hoverText = null;
         private final TextRenderer textRenderer;
         @Nullable
         private PressAction onPress = null;
-        private final Identifier image;
-        private int width;
-        private int height;
+        private final CustomImage image;
 
         private int x = 0;
         private int y = 0;
@@ -82,12 +114,10 @@ public class ClickableImageWidget extends ButtonWidget {
         @Nullable
         ButtonWidget.NarrationSupplier narrationSupplier;
 
-        public Builder(Text text, TextRenderer textRenderer, Identifier image, int width, int height) {
+        public Builder(CTxT text, TextRenderer textRenderer, CustomImage customImage) {
             this.text = text;
             this.textRenderer = textRenderer;
-            this.image = image;
-            this.width = width;
-            this.height = height;
+            this.image = customImage;
         }
 
         public Builder position(int x, int y) {
@@ -101,14 +131,8 @@ public class ClickableImageWidget extends ButtonWidget {
             return this;
         }
 
-        public Builder onHover(Text hoverText) {
+        public Builder onHover(CTxT hoverText) {
             this.hoverText = hoverText;
-            return this;
-        }
-
-        public Builder dimensions(int width, int height) {
-            this.width = width;
-            this.height = height;
             return this;
         }
 
@@ -121,7 +145,7 @@ public class ClickableImageWidget extends ButtonWidget {
             if (this.image == null) {
                 throw new IllegalStateException("Sprite not set");
             }
-            return new ClickableImageWidget(x,y,width,height,text,textRenderer,image,onPress,hoverText);
+            return new ClickableImageWidget(x,y,text,textRenderer,image,onPress,hoverText);
         }
     }
 }
