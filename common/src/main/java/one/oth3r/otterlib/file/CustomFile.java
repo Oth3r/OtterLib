@@ -111,6 +111,9 @@ public interface CustomFile<T extends CustomFile<T>> {
      */
     void update(JsonElement json);
 
+    /**
+     * deprecated in favor of {@link #createDirectory()}
+     */
     @Deprecated(since = "0.1.1", forRemoval = true)
     default void fileNotExist() {
         createDirectory();
