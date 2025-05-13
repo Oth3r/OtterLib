@@ -50,18 +50,18 @@ public class CTxT extends ChatText<MutableText, CTxT> {
     private ClickEvent getClickEvent() {
         if (this.clickEvent == null) return null;
         return switch (this.clickEvent.getAction()) {
-            case RUN_COMMAND -> new ClickEvent.RunCommand(clickEvent.getActionString());
-            case SUGGEST_COMMAND -> new ClickEvent.SuggestCommand(clickEvent.getActionString());
-            case OPEN_URL -> new ClickEvent.OpenUrl(URI.create(clickEvent.getActionString()));
-            case OPEN_FILE -> new ClickEvent.OpenFile(clickEvent.getActionString());
-            case COPY_TO_CLIPBOARD -> new ClickEvent.CopyToClipboard(clickEvent.getActionString());
-            case CHANGE_PAGE -> new ClickEvent.ChangePage(Num.toInt(clickEvent.getActionString()));
+            case RUN_COMMAND -> new ClickEvent(ClickEvent.Action.RUN_COMMAND, clickEvent.getActionString());
+            case SUGGEST_COMMAND -> new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, clickEvent.getActionString());
+            case OPEN_URL -> new ClickEvent(ClickEvent.Action.OPEN_URL, clickEvent.getActionString());
+            case OPEN_FILE -> new ClickEvent(ClickEvent.Action.OPEN_FILE, clickEvent.getActionString());
+            case COPY_TO_CLIPBOARD -> new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, clickEvent.getActionString());
+            case CHANGE_PAGE -> new ClickEvent(ClickEvent.Action.CHANGE_PAGE, clickEvent.getActionString());
         };
     }
 
     private HoverEvent getHoverEvent() {
         if (this.hoverEvent == null) return null;
-        return new HoverEvent.ShowText(this.hoverEvent.b());
+        return new HoverEvent(HoverEvent.Action.SHOW_TEXT, this.hoverEvent.b());
     }
 
     @Override
