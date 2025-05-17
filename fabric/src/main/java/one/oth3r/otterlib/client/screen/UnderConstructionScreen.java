@@ -47,7 +47,7 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen imp
         CTxT text = new CTxT(Text.translatable("otterlib.gui.hover.credit","@bunnestbun"));
         layout.add(new ClickableImageWidget.Builder(text, this.textRenderer,
                 new CustomImage(Identifier.of(Assets.ID, "textures/gui/under_construction.png"),140,140))
-                .onHover(text).onPress(ConfirmLinkScreen.opening(this, URI.create("https://www.instagram.com/bunnestbun/"))).build());
+                .onHover(text).onPress(ConfirmLinkScreen.opening(this, "https://www.instagram.com/bunnestbun/")).build());
 
         initActionButtons();
         initFooter();
@@ -64,7 +64,7 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen imp
 
         actionLayout.add(TextureButtonWidget.createIconButton(
                 Text.translatable("otterlib.gui.config.button.folder"),
-                btn -> Util.getOperatingSystem().open(Paths.get(this.file.getFile().getParent())),
+                btn -> Util.getOperatingSystem().open(Paths.get(this.file.getFile().getParent()).toUri()),
                 Identifier.of(Assets.ID,"textures/gui/sprites/icon/folder.png")).build());
 
         resetButton = actionLayout.add(TextureButtonWidget.createIconButton(

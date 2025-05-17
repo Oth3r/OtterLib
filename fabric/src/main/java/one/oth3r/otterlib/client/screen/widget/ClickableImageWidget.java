@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Supplier;
 
 public class ClickableImageWidget extends ButtonWidget {
-    private final Identifier hoverBackground = Identifier.ofVanilla("textures/gui/sprites/widget/button_disabled.png");
+    private final Identifier hoverBackground = new Identifier("textures/gui/sprites/widget/button_disabled.png");
 
     private final Identifier image;
     private final CTxT hoverTxT;
