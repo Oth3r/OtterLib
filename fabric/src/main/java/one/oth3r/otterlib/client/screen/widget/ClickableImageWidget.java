@@ -72,7 +72,7 @@ public class ClickableImageWidget extends ButtonWidget {
 
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.drawTexture(RenderLayer::getGuiTextured, image,
+        context.drawTexture(image,
                 this.getX(), this.getY(), 0.0f, 0.0f, this.getWidth(), this.getHeight(), this.getWidth(), this.getHeight());
 
         float maxTime = 2.0f; // 2 second long animation
@@ -87,7 +87,7 @@ public class ClickableImageWidget extends ButtonWidget {
             int toolTipHeight = (int)((hoverTime / maxTime) * 20);
             int toolTipY = this.getTooltipY(toolTipHeight);
 
-            context.drawTexture(RenderLayer::getGuiTextured, hoverBackground,
+            context.drawTexture(hoverBackground,
                     getX(), toolTipY, 0.0F, 0.0F, this.getWidth(), toolTipHeight,
                     this.getWidth(), toolTipHeight);
 

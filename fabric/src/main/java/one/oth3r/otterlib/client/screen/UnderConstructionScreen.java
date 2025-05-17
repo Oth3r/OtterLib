@@ -53,19 +53,19 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen imp
         initFooter();
 
         this.layout.forEachChild(this::addDrawableChild);
-        this.refreshWidgetPositions();
+        this.initTabNavigation();
     }
 
     private void initActionButtons() {
         DirectionalLayoutWidget actionLayout = layout.add(DirectionalLayoutWidget.horizontal().spacing(8));
         actionLayout.add(TextureButtonWidget.createIconButton(Text.translatable("otterlib.gui.config.button.file"),
                 btn -> Util.getOperatingSystem().open(this.file.getFile()),
-                Identifier.of(Assets.ID,"icon/file")).build());
+                Identifier.of(Assets.ID,"textures/gui/sprites/icon/file.png")).build());
 
         actionLayout.add(TextureButtonWidget.createIconButton(
                 Text.translatable("otterlib.gui.config.button.folder"),
                 btn -> Util.getOperatingSystem().open(Paths.get(this.file.getFile().getParent())),
-                Identifier.of(Assets.ID,"icon/folder")).build());
+                Identifier.of(Assets.ID,"textures/gui/sprites/icon/folder.png")).build());
 
         resetButton = actionLayout.add(TextureButtonWidget.createIconButton(
                 Text.translatable("otterlib.gui.config.button.reset"),
@@ -74,7 +74,7 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen imp
                     this.file.save();
                     updateButtons();
                 },
-                Identifier.of(Assets.ID, "icon/file_reset")).build());
+                Identifier.of(Assets.ID, "textures/gui/sprites/icon/file_reset.png")).build());
 
 
         revertButton = actionLayout.add(TextureButtonWidget.createIconButton(
@@ -83,7 +83,7 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen imp
                     this.file.save();
                     updateButtons();
                 },
-                Identifier.of(Assets.ID, "icon/revert")).disabled(true).build());
+                Identifier.of(Assets.ID, "textures/gui/sprites/icon/revert.png")).disabled(true).build());
 
 
     }
@@ -133,7 +133,7 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen imp
     }
 
     @Override
-    protected void refreshWidgetPositions() {
+    protected void initTabNavigation() {
         this.layout.refreshPositions();
         SimplePositioningWidget.setPos(this.layout, this.getNavigationFocus());
         updateButtons();

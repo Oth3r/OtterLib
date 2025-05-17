@@ -33,15 +33,15 @@ public abstract class SimpleButton {
     public static class Templates {
         public static Builder donate(CTxT text) {
             return new Builder(text)
-                    .miniIcon(new CustomImage(Identifier.of(Assets.ID, "icon/donate"),15,15));
+                    .miniIcon(new CustomImage(Identifier.of(Assets.ID, "textures/gui/sprites/icon/donate.png"),15,15));
         }
         public static Builder warning(CTxT text) {
             return new Builder(text)
-                    .miniIcon(new CustomImage(Identifier.of(Assets.ID, "icon/warning"),15,15));
+                    .miniIcon(new CustomImage(Identifier.of(Assets.ID, "textures/gui/sprites/icon/warning.png"),15,15));
         }
         public static Builder wiki(CTxT text) {
             return new Builder(text)
-                    .miniIcon(new CustomImage(Identifier.of(Assets.ID, "icon/wiki"),15,15));
+                    .miniIcon(new CustomImage(Identifier.of(Assets.ID, "textures/gui/sprites/icon/wiki.png"),15,15));
         }
         public static Builder done(CTxT text) {
             return new Builder(text).close();

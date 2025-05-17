@@ -94,7 +94,7 @@ public class ConfigScreen extends Screen implements SetClientScreen {
 
 
         this.layout.forEachChild(this::addDrawableChild);
-        this.refreshWidgetPositions();
+        this.initTabNavigation();
     }
 
     private void initHeader() {
@@ -110,7 +110,7 @@ public class ConfigScreen extends Screen implements SetClientScreen {
     }
 
     @Override
-    protected void refreshWidgetPositions() {
+    protected void initTabNavigation() {
         this.layout.refreshPositions();
         if (this.body != null) {
             this.body.position(this.width, this.layout);
