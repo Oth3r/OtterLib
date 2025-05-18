@@ -3,6 +3,7 @@ package one.oth3r.otterlib.client.screen;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
+import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
 import net.minecraft.text.Text;
 import one.oth3r.otterlib.chat.CTxT;
@@ -13,6 +14,7 @@ import one.oth3r.otterlib.client.screen.widget.ConfigsListWidget;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ConfigScreen extends Screen implements SetClientScreen {
@@ -98,11 +100,7 @@ public class ConfigScreen extends Screen implements SetClientScreen {
     }
 
     private void initHeader() {
-        if (customBanner != null) {
-            this.layout.addHeader(customBanner);
-        } else {
-            this.layout.addHeader(this.title,this.textRenderer);
-        }
+        this.layout.addHeader(Objects.requireNonNullElseGet(customBanner, () -> new TextWidget(this.title, this.textRenderer)));
     }
 
     public ConfigsListWidget getBody() {
@@ -112,9 +110,6 @@ public class ConfigScreen extends Screen implements SetClientScreen {
     @Override
     protected void initTabNavigation() {
         this.layout.refreshPositions();
-        if (this.body != null) {
-            this.body.position(this.width, this.layout);
-        }
     }
 
     @Override
