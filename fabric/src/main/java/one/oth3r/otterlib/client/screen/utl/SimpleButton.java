@@ -258,7 +258,7 @@ public abstract class SimpleButton {
 
         @Override
         public TextureButtonWidget build(Screen openScreen) {
-            TextureButtonWidget.Builder builder = new TextureButtonWidget.Builder(text.b(),ConfirmLinkScreen.opening(openScreen,uri.toString()))
+            TextureButtonWidget.Builder builder = new TextureButtonWidget.Builder(text.b(),ConfirmLinkScreen.opening(uri.toString(),openScreen,true))
                     .size(width,height).hideText(hideText);
             if (customImage != null) return builder.texture(customImage).build();
             return builder.build();

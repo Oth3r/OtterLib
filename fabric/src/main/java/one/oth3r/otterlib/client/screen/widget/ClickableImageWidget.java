@@ -3,8 +3,8 @@ package one.oth3r.otterlib.client.screen.widget;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
+import one.oth3r.otterlib.Assets;
 import one.oth3r.otterlib.chat.CTxT;
 import one.oth3r.otterlib.client.screen.utl.CustomImage;
 import org.jetbrains.annotations.Nullable;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Supplier;
 
 public class ClickableImageWidget extends ButtonWidget {
-    private final Identifier hoverBackground = new Identifier("textures/gui/sprites/widget/button_disabled.png");
+    private final Identifier hoverBackground = Identifier.of(Assets.ID,"textures/gui/sprites/widget/button_disabled.png");
 
     private final Identifier image;
     private final CTxT hoverTxT;
@@ -71,7 +71,7 @@ public class ClickableImageWidget extends ButtonWidget {
     }
 
     @Override
-    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+    protected void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
         context.drawTexture(image,
                 this.getX(), this.getY(), 0.0f, 0.0f, this.getWidth(), this.getHeight(), this.getWidth(), this.getHeight());
 

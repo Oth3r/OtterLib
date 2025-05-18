@@ -2,7 +2,7 @@ package one.oth3r.otterlib.client.screen;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
+import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
 import net.minecraft.text.Text;
@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class ConfigScreen extends Screen implements SetClientScreen {
@@ -86,13 +87,15 @@ public class ConfigScreen extends Screen implements SetClientScreen {
     protected void init() {
         this.initHeader();
 
-        this.body = this.layout.addBody(new ConfigsListWidget(client, this));
-        this.body.addAllConfigEntries(this.fileButtons.stream().map(b -> ConfigsListWidget.ConfigEntry.create(b.build(this),this.body)).collect(Collectors.toList()));
+        this.layout.addBody(new GridWidget().setColumnSpacing(10));
+        this.body = this.addSelectableChild(new ConfigsListWidget(client, this));
+        body.addAllConfigEntries(this.fileButtons.stream().map(b -> ConfigsListWidget.ConfigEntry.create(b.build(this),this.body)).collect(Collectors.toList()));
 
         // FOOTER
 
-        DirectionalLayoutWidget footerWidget = this.layout.addFooter(DirectionalLayoutWidget.horizontal().spacing(8));
-        this.footer.forEach(f -> footerWidget.add(f.build(this)));
+        GridWidget footerWidget = this.layout.addFooter(new GridWidget().setColumnSpacing(10));
+        AtomicInteger i = new AtomicInteger();
+        this.footer.forEach(f -> footerWidget.add(f.build(this),0, i.getAndIncrement()));
 
 
         this.layout.forEachChild(this::addDrawableChild);
@@ -114,6 +117,8 @@ public class ConfigScreen extends Screen implements SetClientScreen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        this.renderBackground(context);
+        this.body.render(context, mouseX, mouseY, delta);
         super.render(context, mouseX, mouseY, delta);
     }
 

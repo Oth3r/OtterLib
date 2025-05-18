@@ -14,8 +14,8 @@ public class ConfigsListWidget extends ElementListWidget<ConfigsListWidget.Confi
 
     public ConfigsListWidget(MinecraftClient minecraftClient, ConfigScreen configScreen) {
         super(minecraftClient, configScreen.width,
-                configScreen.layout.getHeight()-configScreen.layout.getHeaderHeight()-configScreen.layout.getFooterHeight(),
-                configScreen.layout.getHeaderHeight(), 32);
+                configScreen.height,
+                configScreen.layout.getHeaderHeight(),configScreen.height-configScreen.layout.getFooterHeight(), 32);
         this.configScreen = configScreen;
     }
 
