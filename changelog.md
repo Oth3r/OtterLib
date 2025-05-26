@@ -1,3 +1,5 @@
+# b0.1.2.2
+* fixed background rendering on mod config screens (1.20.4)
 # b0.1.2.1
 * fixed hoverText null issue
 # b0.1.2.0
