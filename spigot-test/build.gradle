@@ -1,0 +1,71 @@
+plugins {
+    id 'base'
+    id 'java'
+    id "me.modmuss50.mod-publish-plugin" version "0.8.4"
+    id "com.gradleup.shadow"
+}
+
+version = "${project.mod_version}-spigot"
+group = project.maven_group
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven {
+        name = "spigotmc-repo"
+        url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+    }
+    maven {
+        name = "sonatype"
+        url = "https://oss.sonatype.org/content/groups/public/"
+    }
+}
+
+dependencies {
+    implementation 'org.apache.commons:commons-configuration2:2.11.0'
+    compileOnly ("org.spigotmc:spigot-api:${project.minecraft_version}-R0.1-SNAPSHOT")
+
+    implementation "one.oth3r:otterlib:${project.otterlib_version_spigot}-spigot"
+}
+
+def targetJavaVersion = 17
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release = targetJavaVersion
+    }
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset = 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
+
+shadowJar {
+    from sourceSets.main.output
+    configurations = [project.configurations.shadow]
+    minimize()
+}
+
+jar {
+    dependsOn(shadowJar)
+    mustRunAfter(shadowJar)
+
+    // FOR TESTING
+    archiveBaseName.set("otterlib-test-spigot-dev")
+    archiveVersion.set("0")
+    destinationDirectory.set(file("R:/Minecraft/Servers/.Spigot/.Latest/plugins"))
+}

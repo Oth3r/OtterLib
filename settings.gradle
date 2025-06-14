@@ -9,7 +9,9 @@ pluginManagement {
 }
 
 
-include('fabric', 'common')
+include('common')
+//include('spigot')
+include('fabric')
 // tests
 include('fabric-test')
-
+include('spigot-test')
