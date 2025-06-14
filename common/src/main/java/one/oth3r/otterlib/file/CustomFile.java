@@ -155,6 +155,9 @@ public interface CustomFile<T extends CustomFile<T>> {
         }
     }
 
+    /**
+     * this is required to overload and implement for OtterLib config to work properly
+     */
     @Override
     boolean equals(Object obj);
 
