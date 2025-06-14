@@ -59,6 +59,13 @@ public abstract class ChatText<T, C extends ChatText<T, C>> {
 
     public abstract C text(String text);
 
+    /**
+     * sets the text of this ChatText to the text of the provided ChatText
+     */
+    public abstract C text(T text);
+
+    public abstract C text(C text);
+
     public C btn(Boolean button) {
         this.button = button;
         return self();
