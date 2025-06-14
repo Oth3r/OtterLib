@@ -104,8 +104,8 @@ publishMods {
     file = shadowJar.archiveFile.get().asFile
     modLoaders.add("spigot")
 
-    version = mod_version
-    displayName = mod_version+" [Spigot]"
+    version = spigot_version
+    displayName = spigot_version+" [Spigot]"
 
     modrinth {
         accessToken = env.fetchOrNull('MODRINTH')
