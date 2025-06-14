@@ -25,7 +25,7 @@ public interface CustomFile<T extends CustomFile<T>> {
      */
     default void save() {
         if (!Files.exists(getFilePath())) {
-            log("Creating new `{}`", getFilePath().getFileName());
+            log("Creating new `%s`", getFilePath().getFileName());
             createDirectory();
         }
         File file = getFile();
@@ -34,7 +34,7 @@ public interface CustomFile<T extends CustomFile<T>> {
             writer.write(getFileSettings().getGson().toJson(this));
         }
         catch (Exception e) {
-            error(String.format("There was an error saving '%s`: %s", file.getName(), e));
+            error("There was an error saving '%s`: %s", file.getName(), e);
         }
     }
 
@@ -63,7 +63,7 @@ public interface CustomFile<T extends CustomFile<T>> {
         }
         // cant load for some reason
         catch (Exception e) {
-            error("ERROR LOADING '{}': {}", file.getName(),e);
+            error("ERROR LOADING '%s': %s", file.getName(),e);
         }
         // save after loading (if enabled)
         if (save) save();
@@ -126,7 +126,7 @@ public interface CustomFile<T extends CustomFile<T>> {
         try {
             Files.createDirectories(getFilePath().getParent());
         } catch (Exception e) {
-            error("Failed to create config directory... {}", e);
+            error("Failed to create config directory '%s': %s",getFilePath().getParent(),e);
         }
     }
 
