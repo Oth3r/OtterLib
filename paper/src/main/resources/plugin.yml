@@ -1,0 +1,9 @@
+name: OtterLib
+description: Simple library Plugin / Mod
+website: https://github.com/Oth3r/OtterLib
+version: '${version}'
+author: "Oth3r"
+main: one.oth3r.otterlib.OtterLib
+api-version: '1.21.5'
+folia-supported: true
+load: STARTUP
