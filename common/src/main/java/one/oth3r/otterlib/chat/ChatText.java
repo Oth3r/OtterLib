@@ -146,7 +146,7 @@ public abstract class ChatText<T, C extends ChatText<T, C>> {
     public abstract C append(T append);
 
     public C append(C append) {
-        this.append.add(append);
+        this.append.add(append.clone());
         return self();
     }
 
