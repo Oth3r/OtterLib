@@ -73,21 +73,17 @@ public interface CustomFile<T extends CustomFile<T>> {
         // try to read the json
         T file;
         JsonElement json = JsonParser.parseReader(reader);
-        try {
-            file = getFileSettings().getGson().fromJson(json, getFileClass());
-        } catch (Exception e) {
-            throw new NullPointerException();
-        }
+        // update the json element so it can be read properly
+        json = this.updateFromJSON(json);
+        file = getFileSettings().getGson().fromJson(json, getFileClass());
 
-        // if the file couldn't be parsed, (null) try using the custom update method using the JsonElement on the current file
-        // if not use the new file object that is loaded with the file data, and call update using that
+        // if the file couldn't be parsed, (null) throw an exception,
+        // otherwise copy over the read file to the current file & run the post update func
         if (file == null) {
-            this.update(json);
+            throw new NullPointerException();
         } else {
-            // update the instance
-            file.update(json);
-            // load the file to the current object
             copyFileData(file);
+            updateInstance();
         }
     }
 
@@ -107,9 +103,20 @@ public interface CustomFile<T extends CustomFile<T>> {
     void copyFileData(T newFile);
 
     /**
-     * updates the file based on the version number of the current instance
+     * called to update the provided JSON element based on what is read <br/>
+     * updating fields of this class has no effects when this method is called, it will be overwritten
+     * @return the updated {@link JsonElement}
      */
-    void update(JsonElement json);
+    default JsonElement updateFromJSON(JsonElement json) {
+        return json;
+    }
+
+    /**
+     * called after parsing JSON data into this file <br/>
+     * updating fields of this class is supported and will not be overwritten <br/>
+     * if preload JSON updating is needed see & override {@link #updateFromJSON(JsonElement)}
+     */
+    void updateInstance();
 
     /**
      * deprecated in favor of {@link #createDirectory()}
