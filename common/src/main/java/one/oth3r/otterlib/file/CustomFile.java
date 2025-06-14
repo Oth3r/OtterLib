@@ -135,16 +135,16 @@ public interface CustomFile<T extends CustomFile<T>> {
      */
     private void log(String string, Object args) {
         if (getFileSettings().isLogging()) {
-            getFileSettings().getLogger().info(string, args);
+            getFileSettings().getLogger().info(String.format(string, args));
         }
     }
 
     /**
      * logs an error to the console if a logger is provided (via {@link FileSettings})
      */
-    private void error(String format, Object... args) {
+    private void error(String string, Object... args) {
         if (getFileSettings().isLogging()) {
-            getFileSettings().getLogger().error(format,args);
+            getFileSettings().getLogger().severe(String.format(string,args));
         }
     }
 

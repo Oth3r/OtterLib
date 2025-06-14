@@ -2,7 +2,8 @@ package one.oth3r.otterlib.file;
 
 import com.google.gson.Gson;
 import one.oth3r.otterlib.Assets;
-import org.slf4j.Logger;
+
+import java.util.logging.Logger;
 
 
 /**

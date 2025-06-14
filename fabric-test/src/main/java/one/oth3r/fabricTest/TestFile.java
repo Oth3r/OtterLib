@@ -6,11 +6,11 @@ import com.google.gson.annotations.SerializedName;
 import net.fabricmc.loader.api.FabricLoader;
 import one.oth3r.otterlib.file.CustomFile;
 import one.oth3r.otterlib.file.FileSettings;
-import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 public class TestFile implements CustomFile<TestFile> {
 
@@ -25,7 +25,7 @@ public class TestFile implements CustomFile<TestFile> {
 
     @Override
     public FileSettings getFileSettings() {
-        return new FileSettings(LoggerFactory.getLogger("fabric-test"));
+        return new FileSettings(Logger.getLogger("fabric-test"));
     }
 
     @Override
