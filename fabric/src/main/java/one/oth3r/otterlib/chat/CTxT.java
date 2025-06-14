@@ -21,7 +21,6 @@ public class CTxT extends ChatText<MutableText, CTxT> {
 
     public CTxT(MutableText text) {
         super(text);
-        this.text = text.copy();
     }
 
     @Override

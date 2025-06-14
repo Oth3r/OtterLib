@@ -37,7 +37,7 @@ public abstract class ChatText<T, C extends ChatText<T, C>> {
     }
 
     public ChatText(T text) {
-        this.text = text;
+        text(text);
     }
 
     public void copyFromObject(C old) {
