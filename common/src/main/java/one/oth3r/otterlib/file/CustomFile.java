@@ -142,7 +142,7 @@ public interface CustomFile<T extends CustomFile<T>> {
      */
     private void log(String string, Object args) {
         if (getFileSettings().isLogging()) {
-            getFileSettings().getLogger().info(String.format(string, args));
+            getFileSettings().getLogger().info(string, args);
         }
     }
 
@@ -151,7 +151,7 @@ public interface CustomFile<T extends CustomFile<T>> {
      */
     private void error(String string, Object... args) {
         if (getFileSettings().isLogging()) {
-            getFileSettings().getLogger().severe(String.format(string,args));
+            getFileSettings().getLogger().error(string,args);
         }
     }
 
