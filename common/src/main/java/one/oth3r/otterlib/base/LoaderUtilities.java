@@ -14,4 +14,15 @@ public interface LoaderUtilities {
      * @return the CTxT
      */
     CTxT getCTxTFromObj(Object obj);
+
+    /**
+     * a method to check if OtterLib is running on the client or not
+     */
+    boolean isClient();
+
+    /**
+     * only works on client* <br/>
+     * gets the localized text using the client side language system
+     */
+    CTxT getClientTranslatable(String key, Object... args);
 }
