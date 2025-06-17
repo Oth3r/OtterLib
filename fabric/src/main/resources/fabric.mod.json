@@ -16,6 +16,9 @@
   "entrypoints": {
     "main": [
       "one.oth3r.otterlib.OtterLib"
+    ],
+    "client": [
+      "one.oth3r.otterlib.OtterLibClient"
     ]
   },
   "mixins": [
