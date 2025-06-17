@@ -112,15 +112,15 @@ public class LanguageReader {
         Path path;
         if (!getDefault) {
             // first test, override path + current language
-            path = Paths.get(overridePath.toString(), currentLanguage);
+            path = Paths.get(overridePath.toString(), currentLanguage+".json");
             // if failed, default path + current language
             if (!Files.exists(path)) {
-                path = Paths.get(defaultPath.toString(), currentLanguage);
+                path = Paths.get(defaultPath.toString(), currentLanguage+".json");
                 // if failed, full default
                 if (!Files.exists(path)) return getBufferedReader(true);
             }
         } else {
-            path = Paths.get(defaultPath.toString(), defaultLanguage);
+            path = Paths.get(defaultPath.toString(), defaultLanguage+".json");
             if (!Files.exists(path)) throw new IllegalArgumentException(
                     String.format("The default language at `%s` doesn't exist!",path));
         }
