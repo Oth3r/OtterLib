@@ -139,13 +139,26 @@ public class LanguageReader {
     }
 
     /**
+     * retrieves a translation from the client, if on the client, and from the loaded translation if not (useful for client sided text and UI)
+     * @param key the translation key
+     * @param args the arguments for the translation
+     * @return the CTxT of the translation
+     */
+    public CTxT dynamicTranslatable(String key, Object... args) {
+        if (Assets.HELPER.isClient()) // client side, should attempt to use the client's language - might be different from the config language
+            return Assets.HELPER.getClientTranslatable(key, args);
+        else // not client side
+            return translatable(key, args);
+    }
+
+    /**
      * retrieves a translation from the currently loaded language <br/>
      * if the key doesn't exist, the default language file will also be checked.
      * @param key the translation key
      * @param args the arguments for the translation
      * @return the CTxT of the translation
      */
-    public CTxT get(String key, Object... args) {
+    public CTxT translatable(String key, Object... args) {
         return new Parser(key,args).getCTxT();
     }
 
