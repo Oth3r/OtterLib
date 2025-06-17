@@ -87,14 +87,14 @@ public class LanguageReader {
         try {
             languageMap.putAll(new Gson().fromJson(getBufferedReader(false), tToken));
         } catch (Exception e) {
-            Assets.HELPER.getLogger().severe("Error loading language file! "+e);
+            Assets.HELPER.getLogger().error("Error loading language file! "+e);
         }
 
         // also load the default language as a fallback
         try {
             defaultLangMap.putAll(new Gson().fromJson(getBufferedReader(true), tToken));
         } catch (Exception e) {
-            Assets.HELPER.getLogger().severe("Error loading default language file! "+e);
+            Assets.HELPER.getLogger().error("Error loading default language file! "+e);
         }
     }
 

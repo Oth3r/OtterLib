@@ -2,13 +2,11 @@ package one.oth3r.otterlib.base;
 
 import one.oth3r.otterlib.chat.CTxT;
 
-import java.util.logging.Logger;
-
 public interface LoaderUtilities {
     /**
      * gets the logger for the current OtterLib instance
      */
-    Logger getLogger();
+    OtterLogger getLogger();
 
     /**
      * Trys to convert the object into a CTxT. <br/>
