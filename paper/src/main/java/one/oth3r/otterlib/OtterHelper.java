@@ -2,17 +2,16 @@ package one.oth3r.otterlib;
 
 import net.kyori.adventure.text.TextComponent;
 import one.oth3r.otterlib.base.LoaderUtilities;
+import one.oth3r.otterlib.base.OtterLogger;
 import one.oth3r.otterlib.chat.CTxT;
-
-import java.util.logging.Logger;
 
 public class OtterHelper implements LoaderUtilities {
     /**
      * gets the logger for the current OtterLib instance
      */
     @Override
-    public Logger getLogger() {
-        return Logger.getLogger("OtterLib");
+    public OtterLogger getLogger() {
+        return new OtterLogger("OtterLib");
     }
 
     /**
@@ -31,5 +30,22 @@ public class OtterHelper implements LoaderUtilities {
         else output.append(String.valueOf(obj));
 
         return output;
+    }
+
+    /**
+     * a method to check if OtterLib is running on the client or not
+     */
+    @Override
+    public boolean isClient() {
+        return false;
+    }
+
+    /**
+     * only works on client* <br/>
+     * gets the localized text using the client side language system
+     */
+    @Override
+    public CTxT getClientTranslatable(String key, Object... args) {
+        return null;
     }
 }
