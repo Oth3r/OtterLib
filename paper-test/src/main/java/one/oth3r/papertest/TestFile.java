@@ -3,13 +3,13 @@ package one.oth3r.papertest;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
+import one.oth3r.otterlib.base.OtterLogger;
 import one.oth3r.otterlib.file.CustomFile;
 import one.oth3r.otterlib.file.FileSettings;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 public class TestFile implements CustomFile<TestFile> {
 
@@ -24,7 +24,7 @@ public class TestFile implements CustomFile<TestFile> {
 
     @Override
     public FileSettings getFileSettings() {
-        return new FileSettings(Logger.getLogger("fabric-test"));
+        return new FileSettings(new OtterLogger("test-file"));
     }
 
     @Override
@@ -50,15 +50,30 @@ public class TestFile implements CustomFile<TestFile> {
     }
 
     @Override
-    public void update(JsonElement jsonElement) {
-        JsonObject file = jsonElement.getAsJsonObject();
-        // can do both ways
-//        if (file.get("version").getAsDouble() == 1.0) {
-        if (this.version == 1.0) {
-            this.version = 1.1;
-            this.test = !file.get("test-boolean").getAsBoolean();
+    public JsonElement updateFromJSON(JsonElement json) {
+        JsonObject obj = json.getAsJsonObject();
+        double version = obj.get("version").getAsDouble();
+        if (version == 1.0) {
+            version = 1.1;
+            // this update removes the old-boolean property in place of the new test-boolean property
+            // (which when updating is the inverse of old-boolean)
+            obj.addProperty("test-boolean", !obj.get("old-boolean").getAsBoolean());
+            obj.remove("old-boolean");
         }
+        // set the fixed version
+        obj.addProperty("version", version);
+
+
+        return CustomFile.super.updateFromJSON(json);
     }
+
+    @Override
+    public void updateInstance() {
+        // this method is called after the JSON has been loaded
+        // we will make sure that the string is all caps after initialization
+        string = string.toUpperCase();
+    }
+
 
     @Override
     public boolean equals(Object o) {
