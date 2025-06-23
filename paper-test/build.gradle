@@ -19,6 +19,10 @@ repositories {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/groups/public/"
     }
+    maven {
+        name "oth3rMavenSnapshots"
+        url "https://maven.oth3r.one/snapshots"
+    }
 }
 
 dependencies {
