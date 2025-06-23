@@ -71,7 +71,7 @@ jar {
 
 //build in testing server dir
 tasks.register('buildAndMoveJar', Jar) {
-    archiveBaseName.set("directionhud-spigot-dev")
+    archiveBaseName.set("otterlib-test-spigot-dev")
     version = "0"
     from(sourceSets.main.output)
 

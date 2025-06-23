@@ -70,7 +70,7 @@ jar {
 
 //build in testing server dir
 tasks.register('buildAndMoveJar', Jar) {
-    archiveBaseName.set("directionhud-paper-dev")
+    archiveBaseName.set("otterlib-test-paper-dev")
     version = "0"
     from(sourceSets.main.output)
 
