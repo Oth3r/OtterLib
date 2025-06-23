@@ -1,0 +1,79 @@
+plugins {
+    id 'base'
+    id 'java'
+    id "me.modmuss50.mod-publish-plugin" version "0.8.4"
+    id "com.gradleup.shadow"
+}
+
+version = "${project.mod_version}-paper"
+group = project.maven_group
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven {
+        name = 'papermc'
+        url = 'https://repo.papermc.io/repository/maven-public/'
+    }
+    maven {
+        name = "sonatype"
+        url = "https://oss.sonatype.org/content/groups/public/"
+    }
+    maven {
+        name "oth3rMavenSnapshots"
+        url "https://maven.oth3r.one/snapshots"
+    }
+}
+
+dependencies {
+    compileOnly ("io.papermc.paper:paper-api:${project.minecraft_version}-R0.1-SNAPSHOT")
+
+    implementation "one.oth3r:otterlib:${project.otterlib_version}-paper"
+}
+
+def targetJavaVersion = 21
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release = targetJavaVersion
+    }
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset = 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
+
+shadowJar {
+    from sourceSets.main.output
+    configurations = [project.configurations.shadow]
+    minimize()
+}
+
+jar {
+    dependsOn(shadowJar)
+    mustRunAfter(shadowJar)
+}
+
+//build in testing server dir
+tasks.register('buildAndMoveJar', Jar) {
+    archiveBaseName.set("otterlib-test-paper-dev")
+    version = "0"
+    from(sourceSets.main.output)
+
+    destinationDirectory.set(file("/mnt/1TBM2/Minecraft/Servers/Paper/Latest/plugins"))
+//    destinationDirectory.set(file("R:/Minecraft/Servers/Paper/Latest/plugins"))
+}

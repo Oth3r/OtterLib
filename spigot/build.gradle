@@ -1,0 +1,126 @@
+plugins {
+    id 'base'
+    id 'java'
+    id 'maven-publish'
+    id "me.modmuss50.mod-publish-plugin" version "0.8.4"
+    id "com.gradleup.shadow"
+}
+
+version = "${project.spigot_version}-spigot"
+group = project.maven_group
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "spigotmc-repo"
+        url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+    }
+    maven {
+        name = "sonatype"
+        url = "https://oss.sonatype.org/content/groups/public/"
+    }
+}
+
+sourceSets {
+    // Define a new sourceSet for the common code
+    main {
+        java {
+            srcDir '../common/src/main/java'
+        }
+        resources {
+            srcDir '../common/src/main/resources'
+        }
+    }
+}
+
+dependencies {
+//    implementation 'org.apache.commons:commons-configuration2:2.11.0'
+    compileOnly ("org.spigotmc:spigot-api:${project.minecraft_version}-R0.1-SNAPSHOT")
+}
+
+def targetJavaVersion = 17
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release = targetJavaVersion
+    }
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset = 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
+publishing {
+    publications {
+        create("mavenJava", MavenPublication) {
+            artifactId = 'otterlib'
+            from components.java
+        }
+    }
+
+    repositories {
+        maven {
+            name = "oth3rMaven"
+            url = uri("https://maven.oth3r.one/snapshots")
+
+            credentials {
+                username = env.fetchOrNull('oth3rmavenUsername')
+                password = env.fetchOrNull('oth3rmavenPassword')
+            }
+        }
+    }
+}
+
+
+shadowJar {
+    from sourceSets.main.output
+    configurations = [project.configurations.shadow]
+    minimize()
+}
+
+jar {
+    dependsOn(shadowJar)
+    mustRunAfter(shadowJar)
+}
+
+//build in testing server dir
+tasks.register('buildAndMoveJar', Jar) {
+    archiveBaseName.set("otterlib-spigot-dev")
+    version = "0"
+    from(sourceSets.main.output)
+
+    destinationDirectory.set(file("/mnt/1TBM2/Minecraft/Servers/Spigot/Latest/plugins"))
+//    destinationDirectory.set(file("R:/Minecraft/Servers/Spigot/Latest/plugins"))
+}
+
+publishMods {
+    changelog = file('../changelog.md').text
+    type = BETA
+
+    file = shadowJar.archiveFile.get().asFile
+    modLoaders.add("spigot")
+
+    version = spigot_version
+    displayName = spigot_version+" [Spigot]"
+
+    modrinth {
+        accessToken = env.fetchOrNull('MODRINTH')
+        projectId = "zVVpzurY"
+        minecraftVersions.addAll(spigot_versions.split(",").toList())
+
+        announcementTitle = "Download from Modrinth"
+    }
+}

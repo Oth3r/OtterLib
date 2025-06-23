@@ -1,9 +1,8 @@
-package one.oth3r.fabricTest;
+package one.oth3r.papertest;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
-import net.fabricmc.loader.api.FabricLoader;
 import one.oth3r.otterlib.base.OtterLogger;
 import one.oth3r.otterlib.file.CustomFile;
 import one.oth3r.otterlib.file.FileSettings;
@@ -30,7 +29,7 @@ public class TestFile implements CustomFile<TestFile> {
 
     @Override
     public Path getFilePath() {
-        return Paths.get(FabricLoader.getInstance().getConfigDir().toString(),"test.json");
+        return Paths.get(PaperTest.configDir,"test.json");
     }
 
     @Override

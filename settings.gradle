@@ -4,12 +4,18 @@ pluginManagement {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
         }
+        mavenCentral()
         gradlePluginPortal()
     }
 }
 
 
-include('fabric', 'common')
-// tests
-include('fabric-test')
+include('common')
+include('fabric')
+//include('spigot')
+//include('paper')
 
+// tests
+//include('fabric-test')
+//include('spigot-test')
+//include('paper-test')
