@@ -91,10 +91,16 @@ jar {
     dependsOn(shadowJar)
     mustRunAfter(shadowJar)
 
-    // FOR TESTING
-    archiveBaseName.set("otterlib-paper-dev")
-    archiveVersion.set("0")
-    destinationDirectory.set(file("R:/Minecraft/Servers/.Paper/.Latest/plugins"))
+}
+
+//build in testing server dir
+tasks.register('buildAndMoveJar', Jar) {
+    archiveBaseName.set("directionhud-paper-dev")
+    version = "0"
+    from(sourceSets.main.output)
+
+    destinationDirectory.set(file("/mnt/1TBM2/Minecraft/Servers/Paper/Latest/plugins"))
+//    destinationDirectory.set(file("R:/Minecraft/Servers/Paper/Latest/plugins"))
 }
 
 publishMods {
