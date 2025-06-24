@@ -7,10 +7,6 @@ import one.oth3r.otterlib.chat.CTxT;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,8 +16,9 @@ import java.util.regex.Pattern;
 
 
 public class LanguageReader {
-    private final Path defaultPath;
-    private final Path overridePath;
+    private final ResourceReader defaultResource;
+    /// null if no override resource is provided, meaning no alternate config language location
+    private final ResourceReader overrideResource;
     private final String defaultLanguage;
 
     private final Map<String, String> defaultLangMap = new HashMap<>();
@@ -31,14 +28,16 @@ public class LanguageReader {
 
     /**
      * creates a LanguageReader. all language files are parsed in the `.json` format
-     * @param defaultPath the path for all base language files
-     * @param overridePath the path for override languages (player specified config languages)
+     * @param defaultResource the path for all base language files
+     * @param overrideResource the path for override languages (player specified config languages)
      * @param defaultLanguage the key for the default language (e.g., en_us)
      * @param currentLanguage the key for the current language (e.g., en_us)
      */
-    public LanguageReader(Path defaultPath, Path overridePath, String defaultLanguage, String currentLanguage) {
-        this.defaultPath = defaultPath;
-        this.overridePath = overridePath;
+    public LanguageReader(ResourceReader defaultResource, ResourceReader overrideResource, String defaultLanguage, String currentLanguage) {
+        // use a classloader instead of path
+        // maybe make a custom class for this instead
+        this.defaultResource = defaultResource;
+        this.overrideResource = overrideResource;
         this.defaultLanguage = defaultLanguage;
         this.currentLanguage = currentLanguage;
 
@@ -48,13 +47,13 @@ public class LanguageReader {
 
     /**
      * creates a LanguageReader. all language files are parsed in the `.json` format
-     * @param defaultPath the path for all base language files
+     * @param defaultResource the path for all base language files
      * @param defaultLanguage the key for the default language (e.g., en_us)
      * @param currentLanguage the key for the current language (e.g., en_us)
      */
-    public LanguageReader(Path defaultPath, String defaultLanguage, String currentLanguage) {
-        this.defaultPath = defaultPath;
-        this.overridePath = Path.of("");
+    public LanguageReader(ResourceReader defaultResource, String defaultLanguage, String currentLanguage) {
+        this.defaultResource = defaultResource;
+        this.overrideResource = null;
         this.defaultLanguage = defaultLanguage;
         this.currentLanguage = currentLanguage;
 
@@ -108,24 +107,23 @@ public class LanguageReader {
      * @throws IOException if the file cannot be read / I/O issues
      * @throws IllegalArgumentException if the default path, default language cannot be read (very bad)
      */
-    private BufferedReader getBufferedReader(boolean getDefault) throws IOException, IllegalArgumentException {
-        Path path;
+    private BufferedReader getBufferedReader(boolean getDefault) throws IOException {
         if (!getDefault) {
-            // first test, override path + current language
-            path = Paths.get(overridePath.toString(), currentLanguage+".json");
-            // if failed, default path + current language
-            if (!Files.exists(path)) {
-                path = Paths.get(defaultPath.toString(), currentLanguage+".json");
-                // if failed, full default
-                if (!Files.exists(path)) return getBufferedReader(true);
+            if (overrideResource != null) {
+                try {
+                    // return the reader if the override language is available
+                    return overrideResource.getResource(currentLanguage+".json");
+                }
+                // if exception is thrown, it means the override language is not available
+                catch (Exception ignored) {}
             }
-        } else {
-            path = Paths.get(defaultPath.toString(), defaultLanguage+".json");
-            if (!Files.exists(path)) throw new IllegalArgumentException(
-                    String.format("The default language at `%s` doesn't exist!",path));
+            try {
+                return defaultResource.getResource(currentLanguage+".json");
+            } catch (Exception e) {
+                Assets.HELPER.getLogger().error("Error loading language file `%s` from: "+defaultResource.toString(), currentLanguage);
+            }
         }
-
-        return Files.newBufferedReader(path, StandardCharsets.UTF_8);
+        return defaultResource.getResource(defaultLanguage+".json");
     }
 
     /**
