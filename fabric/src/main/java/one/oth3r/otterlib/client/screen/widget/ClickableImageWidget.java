@@ -1,9 +1,9 @@
 package one.oth3r.otterlib.client.screen.widget;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
 import one.oth3r.otterlib.chat.CTxT;
 import one.oth3r.otterlib.client.screen.utl.CustomImage;
@@ -19,7 +19,6 @@ public class ClickableImageWidget extends ButtonWidget {
     private final TextRenderer textRenderer;
 
     private float hoverTime = 0;
-    private final float MAX_TIME = 2.0f;
 
     /**
      * creates a clickable image widget
@@ -73,27 +72,30 @@ public class ClickableImageWidget extends ButtonWidget {
 
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, image,
+        context.drawTexture(RenderLayer::getGuiTextured, image,
                 this.getX(), this.getY(), 0.0f, 0.0f, this.getWidth(), this.getHeight(), this.getWidth(), this.getHeight());
 
+        float maxTime = 2.0f; // 2 second long animation
+
         if (canHover()) {
-            hoverTime = Math.min(hoverTime + delta, MAX_TIME);
+            hoverTime = Math.min(hoverTime + delta, maxTime);
         } else if (hoverTime > 0f) {
             hoverTime = Math.max(hoverTime - delta, 0f);
         }
 
         if (hoverTime > 0f) {
-            int toolTipHeight = (int)((hoverTime / MAX_TIME) * 20);
+            int toolTipHeight = (int)((hoverTime / maxTime) * 20);
             int toolTipY = this.getTooltipY(toolTipHeight);
 
-            context.drawTexture(RenderPipelines.GUI_TEXTURED, hoverBackground,
+            context.drawTexture(RenderLayer::getGuiTextured, hoverBackground,
                     getX(), toolTipY, 0.0F, 0.0F, this.getWidth(), toolTipHeight,
                     this.getWidth(), toolTipHeight);
-            if (hoverTime >= MAX_TIME) {
+
+            if (hoverTime >= maxTime) {
                 assert hoverTxT != null; // cant be null because hovertime only goes up if hoverTxT is not null
                 drawScrollableText(context, textRenderer, hoverTxT.b(),
                         getX() + 4, toolTipY, getX() + this.getWidth() - 4,
-                        toolTipY + toolTipHeight, 0xFFFFFFFF);
+                        toolTipY + toolTipHeight, 0xFFFFFF);
             }
         }
     }
