@@ -1,7 +1,0 @@
-name: PaperTest
-description: Test
-version: '${version}'
-author: "Oth3r"
-main: one.oth3r.papertest.PaperTest
-api-version: '1.21.5'
-depend: [OtterLib]

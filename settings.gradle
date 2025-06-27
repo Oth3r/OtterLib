@@ -12,10 +12,6 @@ pluginManagement {
 
 include('common')
 include('fabric')
-//include('spigot')
-//include('paper')
 
 // tests
 //include('fabric-test')
-//include('spigot-test')
-//include('paper-test')
