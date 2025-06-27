@@ -1,13 +1,4 @@
-# b0.1.2.1
-* fixed hoverText null issue
-# b0.1.2.0
-* fixed modmenu warning in logs
-### Screens & UI
-* undeprecated the CustomImage constructor
-* made ClickableImageWidget use CTxT
-* added a title image lang entry
-### Custom File
-* better error logging
-* fixed directory creation logic
-* tweaked saving and loading logic
-* deprecated fileNotExist() in favor of createDirectory()
+# b0.2.1.0
+Fixed support for reading language files inside of jars.
+* added ResourceReader, allowing for the reading of resources in the jar
+* updated LanguageReader to use ResourceReaders instead of normal paths

@@ -25,7 +25,7 @@ public interface CustomFile<T extends CustomFile<T>> {
      */
     default void save() {
         if (!Files.exists(getFilePath())) {
-            log("Creating new `{}`", getFilePath().getFileName());
+            log("Creating new `%s`", getFilePath().getFileName());
             createDirectory();
         }
         File file = getFile();
@@ -34,7 +34,7 @@ public interface CustomFile<T extends CustomFile<T>> {
             writer.write(getFileSettings().getGson().toJson(this));
         }
         catch (Exception e) {
-            error(String.format("There was an error saving '%s`: %s", file.getName(), e));
+            error("There was an error saving '%s`: %s", file.getName(), e);
         }
     }
 
@@ -63,7 +63,7 @@ public interface CustomFile<T extends CustomFile<T>> {
         }
         // cant load for some reason
         catch (Exception e) {
-            error("ERROR LOADING '{}': {}", file.getName(),e);
+            error("ERROR LOADING '%s': %s", file.getName(),e);
         }
         // save after loading (if enabled)
         if (save) save();
@@ -73,21 +73,17 @@ public interface CustomFile<T extends CustomFile<T>> {
         // try to read the json
         T file;
         JsonElement json = JsonParser.parseReader(reader);
-        try {
-            file = getFileSettings().getGson().fromJson(json, getFileClass());
-        } catch (Exception e) {
-            throw new NullPointerException();
-        }
+        // update the json element so it can be read properly
+        json = this.updateFromJSON(json);
+        file = getFileSettings().getGson().fromJson(json, getFileClass());
 
-        // if the file couldn't be parsed, (null) try using the custom update method using the JsonElement on the current file
-        // if not use the new file object that is loaded with the file data, and call update using that
+        // if the file couldn't be parsed, (null) throw an exception,
+        // otherwise copy over the read file to the current file & run the post update func
         if (file == null) {
-            this.update(json);
+            throw new NullPointerException();
         } else {
-            // update the instance
-            file.update(json);
-            // load the file to the current object
             copyFileData(file);
+            updateInstance();
         }
     }
 
@@ -107,9 +103,20 @@ public interface CustomFile<T extends CustomFile<T>> {
     void copyFileData(T newFile);
 
     /**
-     * updates the file based on the version number of the current instance
+     * called to update the provided JSON element based on what is read <br/>
+     * updating fields of this class has no effects when this method is called, it will be overwritten
+     * @return the updated {@link JsonElement}
      */
-    void update(JsonElement json);
+    default JsonElement updateFromJSON(JsonElement json) {
+        return json;
+    }
+
+    /**
+     * called after parsing JSON data into this file <br/>
+     * updating fields of this class is supported and will not be overwritten <br/>
+     * if preload JSON updating is needed see & override {@link #updateFromJSON(JsonElement)}
+     */
+    void updateInstance();
 
     /**
      * deprecated in favor of {@link #createDirectory()}
@@ -126,7 +133,7 @@ public interface CustomFile<T extends CustomFile<T>> {
         try {
             Files.createDirectories(getFilePath().getParent());
         } catch (Exception e) {
-            error("Failed to create config directory... {}", e);
+            error("Failed to create config directory '%s': %s",getFilePath().getParent(),e);
         }
     }
 
@@ -142,12 +149,15 @@ public interface CustomFile<T extends CustomFile<T>> {
     /**
      * logs an error to the console if a logger is provided (via {@link FileSettings})
      */
-    private void error(String format, Object... args) {
+    private void error(String string, Object... args) {
         if (getFileSettings().isLogging()) {
-            getFileSettings().getLogger().error(format,args);
+            getFileSettings().getLogger().error(string,args);
         }
     }
 
+    /**
+     * this is required to overload and implement for OtterLib config to work properly
+     */
     @Override
     boolean equals(Object obj);
 
