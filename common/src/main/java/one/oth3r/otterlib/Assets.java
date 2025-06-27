@@ -17,6 +17,7 @@ import java.util.Map;
 
 public class Assets {
     public static final String ID = "otterlib";
+    public static final OtterHelper HELPER = new OtterHelper();
 
     /**
      * gets a Gson with the LenientTypeAdapter

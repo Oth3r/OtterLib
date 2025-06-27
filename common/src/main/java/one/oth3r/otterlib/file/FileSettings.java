@@ -2,22 +2,22 @@ package one.oth3r.otterlib.file;
 
 import com.google.gson.Gson;
 import one.oth3r.otterlib.Assets;
-import org.slf4j.Logger;
+import one.oth3r.otterlib.base.OtterLogger;
 
 
 /**
  * settings to provide a file class to use when saving and loading
  */
 public class FileSettings {
-    protected Logger logger;
+    protected OtterLogger logger;
     protected Gson gson;
 
-    public FileSettings(Logger logger, Gson gson) {
+    public FileSettings(OtterLogger logger, Gson gson) {
         this.logger = logger;
         this.gson = gson;
     }
 
-    public FileSettings(Logger logger) {
+    public FileSettings(OtterLogger logger) {
         this.logger = logger;
         this.gson = Assets.getGson();
     }
@@ -30,11 +30,11 @@ public class FileSettings {
         return logger != null;
     }
 
-    public Logger getLogger() {
+    public OtterLogger getLogger() {
         return logger;
     }
 
-    public void setLogger(Logger logger) {
+    public void setLogger(OtterLogger logger) {
         this.logger = logger;
     }
 
