@@ -13,5 +13,6 @@ public class OtterLib implements ModInitializer {
 
     @Override
     public void onInitialize() {
+
     }
 }

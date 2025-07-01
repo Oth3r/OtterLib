@@ -4,6 +4,7 @@
   "package": "one.oth3r.otterlib.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "ReloadCommandMixin"
   ],
   "client": [
     "WindowFocusMixin"
