@@ -21,7 +21,6 @@ public class CTxT extends ChatText<MutableText, CTxT> {
 
     public CTxT(MutableText text) {
         super(text);
-        this.text = text.copy();
     }
 
     @Override
@@ -32,6 +31,23 @@ public class CTxT extends ChatText<MutableText, CTxT> {
     @Override
     public CTxT text(String text) {
         this.text = Text.literal(text);
+        return this;
+    }
+
+    /**
+     * sets the text of this ChatText to the text of the provided ChatText
+     *
+     * @param text
+     */
+    @Override
+    public CTxT text(MutableText text) {
+        this.text = text.copy();
+        return this;
+    }
+
+    @Override
+    public CTxT text(CTxT text) {
+        this.text = text.text;
         return this;
     }
 

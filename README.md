@@ -1,9 +1,26 @@
 A simple library mod for minecraft, made mostly to develop my mods easier, but can be used by anyone!
 Currently supported loaders: Fabric, Spigot, & Paper
 
-## Use in your projects!
-COMING SOON!
-maven repository for otterlib is coming soon!
+## Use in your projects! 👍️
+Want to use OtterLib in your project? You can add it as a dependency in your `build.gradle` file:
+```groovy
+repositories {
+    maven {
+        name "oth3rMavenSnapshots"
+        url "https://maven.oth3r.one/snapshots"
+    }
+}
+```
+Implementing on each loader, where `${project.otterlib_version}` is the current version of OtterLib for the loader (e.g. `0.2.0.0+1.21.6`, `0.2.0.0+1.20-1.21.6`)
+```groovy
+// fabric
+modImplementation "one.oth3r:otterlib:${project.otterlib_version}-fabric"
+// spigot
+implementation "one.oth3r:otterlib:${project.otterlib_version}-spigot"
+// paper
+implementation "one.oth3r:otterlib:${project.otterlib_version}-paper"
+```
+Visit the [maven repository](https://maven.oth3r.one/) to see more indepth information about the library, including the latest versions.
 
 
 ## Features
@@ -17,6 +34,9 @@ player.sendMessage(new CTxT("Hello").color(Color.BLUE).bold(true).strikethrough(
 *in game example*:
 
 ![In game example](https://www.oth3r.one/assets/mods/otterlib/ctxt_demo.png)
+
+### 📜 Custom Language Reader
+OtterLib provides a custom language reader that allows you to easily have server-side localization on all supported loaders. There is also support for a secondary location for locales for easy player overrides.
 
 ### 🗃️ Robust file saving and loading
 Adds an interface that enables easy config file creation with support for saving, loading, and updating versions easily.
