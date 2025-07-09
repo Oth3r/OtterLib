@@ -13,6 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ReloadCommandMixin {
     @Inject(at = @At("TAIL"), method = "register")
     private static void register(CommandDispatcher<ServerCommandSource> dispatcher, CallbackInfo ci) {
-        FileRegistry.finishRegistration();
+        FileRegistry.queueLoading();
     }
 }

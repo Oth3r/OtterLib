@@ -41,7 +41,7 @@ public class FileRegistry {
      * Loads all files that have {@link FileEntry#autoLoad} enabled. <br/>
      * Automatically called by OtterLib on ServerStartedEvent or ClientStartedEvent (if on client) & `/reload` command on modded loaders.
      */
-    public static void finishRegistration() {
+    public static void queueLoading() {
         REGISTRY.values().forEach(map -> map.values().forEach(entry -> {
             if (entry.autoLoad()) entry.file().load();
         }));
