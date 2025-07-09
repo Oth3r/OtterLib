@@ -8,7 +8,10 @@ public class OtterLibServer implements DedicatedServerModInitializer {
     @Override
     public void onInitializeServer() {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            FileRegistry.finishRegistration();
+            FileRegistry.queueLoading();
+
+            // finish initialization
+            OtterLib.isInitialized = true;
         });
 
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> {

@@ -13,7 +13,9 @@ public class OtterLibClient implements ClientModInitializer {
         OtterLib.isClient = true;
 
         ClientLifecycleEvents.CLIENT_STARTED.register((client) -> {
-            FileRegistry.finishRegistration();
+            FileRegistry.queueLoading();
+            // finish initialization
+            OtterLib.isInitialized = true;
         });
 
         ClientLifecycleEvents.CLIENT_STOPPING.register((client) -> {
