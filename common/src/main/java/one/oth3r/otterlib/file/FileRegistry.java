@@ -1,5 +1,7 @@
 package one.oth3r.otterlib.file;
 
+import one.oth3r.otterlib.Assets;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +16,14 @@ public class FileRegistry {
      */
     public static void registerFile(String modId, FileEntry entry) {
         REGISTRY.computeIfAbsent(modId, id -> new HashMap<>()).put(entry.fileId,entry);
+
+        // try to load the file if the mod is already initialized & auto load is enabled
+        if (entry.autoLoad && Assets.HELPER.isInitialized()) {
+            // load the file if it's not null
+            if (entry.file != null) {
+                entry.file.load();
+            }
+        }
     }
 
     /**
