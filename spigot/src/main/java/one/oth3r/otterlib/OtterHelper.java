@@ -41,6 +41,15 @@ public class OtterHelper implements LoaderUtilities {
     }
 
     /**
+     * a method to check if OtterLib is initialized or not <br/>
+     * used to check if a newly registered file should be loaded or wait for initialization to do it automatically
+     */
+    @Override
+    public boolean isInitialized() {
+        return OtterLib.isInitialized();
+    }
+
+    /**
      * only works on client* <br/>
      * gets the localized text using the client side language system
      */
