@@ -1,11 +1,12 @@
-package one.oth3r.otterlib.file;
+package one.oth3r.otterlib.registry;
 
 import one.oth3r.otterlib.Assets;
+import one.oth3r.otterlib.file.CustomFile;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class FileRegistry {
+public class CustomFileReg {
     private static final Map<String, Map<String, FileEntry>> REGISTRY = new HashMap<>();
 
     /**

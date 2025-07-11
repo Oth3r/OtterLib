@@ -1,9 +1,11 @@
-package one.oth3r.otterlib.file;
+package one.oth3r.otterlib.registry;
+
+import one.oth3r.otterlib.file.LanguageReader;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class LangRegistry {
+public class LanguageReg {
     private static final String DEFAULT_LANG_ID = "main";
     private static final Map<String, Map<String, LanguageReader>> REGISTRY = new HashMap<>();
 
