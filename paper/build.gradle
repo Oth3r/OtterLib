@@ -111,7 +111,7 @@ publishMods {
     changelog = file('../changelog.md').text
     type = BETA
 
-    file = shadowJar.archiveFile.get().asFile
+    file = shadowJar.archiveFile
     modLoaders.add("paper")
     modLoaders.add("folia")
     modLoaders.add("purpur")

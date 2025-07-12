@@ -110,7 +110,7 @@ publishMods {
     changelog = file('../changelog.md').text
     type = BETA
 
-    file = shadowJar.archiveFile.get().asFile
+    file = shadowJar.archiveFile
     modLoaders.add("spigot")
 
     version = spigot_version
