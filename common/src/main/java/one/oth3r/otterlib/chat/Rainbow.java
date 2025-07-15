@@ -81,15 +81,16 @@ public class Rainbow {
      * makes a string ranbow using the varibles in the Rainbow class
      * @return a colorized CTxT object
      */
-    public CTxT colorize(String target, CTxT settings) {
+    @SuppressWarnings("unchecked")
+    public <T extends LoaderText<T>> LoaderText<T> colorize(String target, LoaderText<T> settings) {
         // if not enabled, don't send a string
-        if (!enabled) return new CTxT(target);
+        if (!enabled) return new LoaderText<>(target);
 
         // get the hue as the position
         float hue = position;
 
         // create the TxT to add too
-        CTxT rainbow = new CTxT();
+        LoaderText<T> rainbow = new LoaderText<>();
 
         // loop for the text length
         for (int i = 0; i < target.codePointCount(0, target.length()); i++) {
@@ -102,7 +103,7 @@ public class Rainbow {
             // get the color from the hue, sat and brightness
             Color color = Color.getHSBColor(hue / 360.0f, saturation, brightness);
 
-            rainbow.append(new CTxT(Character.toString(target.codePointAt(i)))
+            rainbow.append((T) new LoaderText<>(Character.toString(target.codePointAt(i)))
                     .color(color)
                     // copy the settings of the settings CTxT EXCEPT for button
                     .bold(settings.isBold())
