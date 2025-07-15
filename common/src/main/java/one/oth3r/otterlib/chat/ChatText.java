@@ -1,5 +1,7 @@
 package one.oth3r.otterlib.chat;
 
+import one.oth3r.otterlib.chat.hover.HoverAction;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -10,12 +12,11 @@ import java.util.stream.Collectors;
  * @param <C> the main object that is used by the modloader
  */
 public abstract class ChatText<T, C extends ChatText<T, C>> {
-    // todo add custom tag support
     protected T text;
     protected Boolean button = false;
     protected Color color = Color.WHITE;
     protected ClickAction clickEvent = null;
-    protected C hoverEvent = null; // todo better way to do hovers
+    protected HoverAction<?> hoverEvent = null;
     protected Boolean bold = false;
     protected Boolean italic = false;
     protected Boolean strikethrough = false;
@@ -86,8 +87,8 @@ public abstract class ChatText<T, C extends ChatText<T, C>> {
         return self();
     }
 
-    public C hover(C hoverText) {
-        this.hoverEvent = hoverText;
+    public C hover(HoverAction<?> hoverAction) {
+        this.hoverEvent = hoverAction;
         return self();
     }
 
@@ -192,7 +193,7 @@ public abstract class ChatText<T, C extends ChatText<T, C>> {
         return clickEvent;
     }
 
-    public C getHover() {
+    public HoverAction<?> getHover() {
         return hoverEvent;
     }
 
