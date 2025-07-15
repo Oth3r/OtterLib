@@ -36,7 +36,7 @@ public class FabricTestClient implements ClientModInitializer {
         return new ConfigScreen(parent, new CTxT("test"),
                 new CustomImage(Identifier.of(FabricTest.MOD_ID, "textures/gui/banner.png"),240, 60),
                 List.of(
-                        SimpleButton.Templates.fileEditor(new CTxT("Test File"),(TestFile) CustomFileReg.getFile(FabricTest.MOD_ID, TestFile.ID), new CustomImage(Identifier.of(FabricTest.MOD_ID, "textures/gui/sprites/button/server_button"),246,26)).build(),
+                        SimpleButton.Templates.fileEditor(new CTxT("Test File"),(TestFile) CustomFileReg.getFile(FabricTest.MOD_ID, TestFile.ID), new CustomImage(Identifier.of(FabricTest.MOD_ID, "textures/gui/sprites/button/server_button.png"),246,26)).build(),
                         SimpleButton.Templates.fileEditor(new CTxT("Test File No Image"),(TestFile) CustomFileReg.getFile(FabricTest.MOD_ID, TestFile.ID)).build(),
                         SimpleButton.Templates.wiki(new CTxT("Help")).openLink("https://oth3r.one").size(30,30).build(),
                         SimpleButton.Templates.wiki(new CTxT("Help")).openLink("https://oth3r.one").size(30,30).build(),
