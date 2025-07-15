@@ -13,7 +13,7 @@ public class ClickAction {
 
     public ClickAction(int action, String actionString) {
         this.action = Enums.search((e) -> e.getCode() == action, ClickActions.class).stream()
-                .findFirst().orElse(ClickActions.SUGGEST_COMMAND);
+                .findFirst().orElse(ClickActions.NOTHING);
         this.actionString = actionString;
     }
 

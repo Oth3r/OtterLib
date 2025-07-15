@@ -66,6 +66,7 @@ public class CTxT extends ChatText<MutableText, CTxT> {
     private ClickEvent getClickEvent() {
         if (this.clickEvent == null) return null;
         return switch (this.clickEvent.getAction()) {
+            case NOTHING -> null;
             case RUN_COMMAND -> new ClickEvent.RunCommand(clickEvent.getActionString());
             case SUGGEST_COMMAND -> new ClickEvent.SuggestCommand(clickEvent.getActionString());
             case OPEN_URL -> new ClickEvent.OpenUrl(URI.create(clickEvent.getActionString()));

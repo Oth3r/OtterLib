@@ -63,6 +63,7 @@ public class CTxT extends ChatText<TextComponent, CTxT> {
     private ClickEvent getClickEvent() {
         if (this.clickEvent == null) return null;
         return switch (this.clickEvent.getAction()) {
+            case NOTHING -> null;
             case RUN_COMMAND -> new ClickEvent(ClickEvent.Action.RUN_COMMAND,clickEvent.getActionString());
             case SUGGEST_COMMAND -> new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND,clickEvent.getActionString());
             case OPEN_URL -> new ClickEvent(ClickEvent.Action.OPEN_URL,clickEvent.getActionString());
