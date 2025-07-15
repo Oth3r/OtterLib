@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.Objects;
 
 public class TestFile implements CustomFile<TestFile> {
+    public static final String ID = "test_file";
 
     @SerializedName("version")
     private double version = 1.1;

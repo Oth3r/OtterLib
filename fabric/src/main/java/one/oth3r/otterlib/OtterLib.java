@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 
 public class OtterLib implements ModInitializer {
     protected static boolean isClient = false;
+    protected static boolean isInitialized = false;
     /**
      * gets if the loader is clientside or not
      */
@@ -11,7 +12,13 @@ public class OtterLib implements ModInitializer {
         return isClient;
     }
 
-    @Override
-    public void onInitialize() {
+    /**
+     * gets if OtterLib is initialized or not
+     */
+    public static boolean isInitialized() {
+        return isInitialized;
     }
+
+    @Override
+    public void onInitialize() {}
 }

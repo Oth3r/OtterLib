@@ -19,6 +19,9 @@
     ],
     "client": [
       "one.oth3r.otterlib.OtterLibClient"
+    ],
+    "server": [
+      "one.oth3r.otterlib.OtterLibServer"
     ]
   },
   "mixins": [
