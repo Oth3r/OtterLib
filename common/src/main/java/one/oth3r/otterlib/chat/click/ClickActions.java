@@ -1,4 +1,4 @@
-package one.oth3r.otterlib.chat;
+package one.oth3r.otterlib.chat.click;
 
 public enum ClickActions {
     NOTHING("nothing", 0),

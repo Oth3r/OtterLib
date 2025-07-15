@@ -1,4 +1,4 @@
-package one.oth3r.otterlib.chat;
+package one.oth3r.otterlib.chat.click;
 
 import one.oth3r.otterlib.base.Enums;
 
