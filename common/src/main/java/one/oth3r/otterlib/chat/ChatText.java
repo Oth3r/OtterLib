@@ -1,5 +1,6 @@
 package one.oth3r.otterlib.chat;
 
+import one.oth3r.otterlib.chat.click.ClickAction;
 import one.oth3r.otterlib.chat.hover.HoverAction;
 
 import java.awt.*;
