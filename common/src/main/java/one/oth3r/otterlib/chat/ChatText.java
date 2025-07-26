@@ -162,6 +162,10 @@ public abstract class ChatText<T, C extends ChatText<T, C>> {
     @Override
     public abstract String toString();
 
+    public T getText() {
+        return text;
+    }
+
     public Boolean isBtn() {
         return button;
     }
@@ -196,6 +200,10 @@ public abstract class ChatText<T, C extends ChatText<T, C>> {
 
     public HoverAction<?> getHover() {
         return hoverEvent;
+    }
+
+    public ArrayList<C> getAppends() {
+        return new ArrayList<>(append);
     }
 
     public boolean isEmpty() {
