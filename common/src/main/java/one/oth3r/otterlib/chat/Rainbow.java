@@ -1,6 +1,7 @@
 package one.oth3r.otterlib.chat;
 
 import java.awt.*;
+import java.util.Objects;
 
 public class Rainbow {
     protected boolean enabled = false;
@@ -120,5 +121,17 @@ public class Rainbow {
         // update the position to the new ending point
         position = hue;
         return rainbow;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Rainbow rainbow = (Rainbow) o;
+        return enabled == rainbow.enabled && Float.compare(position, rainbow.position) == 0 && Float.compare(stepSize, rainbow.stepSize) == 0 && Float.compare(brightness, rainbow.brightness) == 0 && Float.compare(saturation, rainbow.saturation) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(enabled, position, stepSize, brightness, saturation);
     }
 }
