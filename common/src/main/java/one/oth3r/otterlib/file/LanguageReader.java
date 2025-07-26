@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import one.oth3r.otterlib.Assets;
 import one.oth3r.otterlib.chat.CTxT;
+import one.oth3r.otterlib.chat.LoaderText;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -156,8 +157,8 @@ public class LanguageReader {
      * @param args the arguments for the translation
      * @return the CTxT of the translation
      */
-    public CTxT translatable(String key, Object... args) {
-        return new Parser(key,args).getCTxT();
+    public <T extends LoaderText<T>> T translatable(String key, Object... args) {
+        return new Parser(key,args).getTxT();
     }
 
     /**
@@ -172,7 +173,8 @@ public class LanguageReader {
             this.placeholders = placeholders;
         }
 
-        public CTxT getCTxT() {
+        @SuppressWarnings("unchecked")
+        public <T extends LoaderText<T>> T getTxT() {
             String translated = getLanguageValue(translationKey);
             if (placeholders != null && placeholders.length > 0) {
                 //removed all double \\ and replaces with \
@@ -197,7 +199,7 @@ public class LanguageReader {
                 }
                 //if there are placeholders specified, and the split is more than 1, it will replace %(dfs) with the placeholder objects
                 if (parts.length > 1) {
-                    CTxT txt = new CTxT();
+                    T txt = (T) new LoaderText<>();
                     int i = 0;
                     for (String match : matches) {
                         int get = i;
@@ -208,14 +210,14 @@ public class LanguageReader {
                         }
                         if (parts.length != i) txt.append(parts[i]);
                         //convert the obj into txt
-                        txt.append(Assets.HELPER.getCTxTFromObj(placeholders[get]));
+                        txt.append((T) Assets.HELPER.getTxTFromObj(placeholders[get]));
                         i++;
                     }
                     if (parts.length != i) txt.append(parts[i]);
-                    return new CTxT(txt);
+                    return (T) new LoaderText<>(txt);
                 }
             }
-            return new CTxT(translated);
+            return (T) new LoaderText<>(translated);
         }
     }
 }

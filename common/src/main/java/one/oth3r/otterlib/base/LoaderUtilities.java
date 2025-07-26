@@ -1,6 +1,7 @@
 package one.oth3r.otterlib.base;
 
 import one.oth3r.otterlib.chat.CTxT;
+import one.oth3r.otterlib.chat.LoaderText;
 
 public interface LoaderUtilities {
     /**
@@ -13,7 +14,7 @@ public interface LoaderUtilities {
      * on different loaders, different tactics are used to grab the loader's different default Text implementations
      * @return the CTxT
      */
-    CTxT getCTxTFromObj(Object obj);
+    <T extends LoaderText<T>> T getTxTFromObj(Object obj);
 
     /**
      * a method to check if OtterLib is running on the client or not
