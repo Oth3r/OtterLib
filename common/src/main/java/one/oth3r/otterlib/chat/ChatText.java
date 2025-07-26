@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public abstract class ChatText<T, C extends ChatText<T, C>> {
     protected T text;
     protected Boolean button = false;
-    protected Color color = Color.WHITE;
+    protected Color color = null;
     protected ClickAction clickEvent = null;
     protected HoverAction<?> hoverEvent = null;
     protected Boolean bold = false;
