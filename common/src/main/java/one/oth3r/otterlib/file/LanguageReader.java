@@ -78,7 +78,7 @@ public class LanguageReader {
     }
 
     /**
-     * loads the language files needed for the reader to work
+     * loads the language files needed for the reader to work <br/> call {@link #reloadLanguages()} to reload outside this class
      */
     private void load() {
         Type tToken = new TypeToken<Map<String, String>>(){}.getType();
