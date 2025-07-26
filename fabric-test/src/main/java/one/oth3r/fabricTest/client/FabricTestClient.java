@@ -8,11 +8,13 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
 import one.oth3r.fabricTest.FabricTest;
+import one.oth3r.fabricTest.TestFile;
 import one.oth3r.otterlib.Assets;
 import one.oth3r.otterlib.chat.CTxT;
 import one.oth3r.otterlib.client.screen.ConfigScreen;
 import one.oth3r.otterlib.client.screen.utl.CustomImage;
 import one.oth3r.otterlib.client.screen.utl.SimpleButton;
+import one.oth3r.otterlib.registry.CustomFileReg;
 import org.lwjgl.glfw.GLFW;
 
 import java.net.URI;
@@ -34,8 +36,8 @@ public class FabricTestClient implements ClientModInitializer {
         return new ConfigScreen(parent, new CTxT("test"),
                 new CustomImage(Identifier.of(FabricTest.MOD_ID, "textures/gui/banner.png"),240, 60),
                 List.of(
-                        SimpleButton.Templates.fileEditor(new CTxT("Test File"), FabricTest.testFile, new CustomImage(Identifier.of(FabricTest.MOD_ID, "textures/gui/sprites/button/server_button.png"),246,26)).build(),
-                        SimpleButton.Templates.fileEditor(new CTxT("Test File No Image"), FabricTest.testFile).build(),
+                        SimpleButton.Templates.fileEditor(new CTxT("Test File"),(TestFile) CustomFileReg.getFile(FabricTest.MOD_ID, TestFile.ID), new CustomImage(Identifier.of(FabricTest.MOD_ID, "textures/gui/sprites/button/server_button.png"),246,26)).build(),
+                        SimpleButton.Templates.fileEditor(new CTxT("Test File No Image"),(TestFile) CustomFileReg.getFile(FabricTest.MOD_ID, TestFile.ID)).build(),
                         SimpleButton.Templates.wiki(new CTxT("Help")).openLink("https://oth3r.one").size(30,30).build(),
                         SimpleButton.Templates.wiki(new CTxT("Help")).openLink("https://oth3r.one").size(30,30).build(),
                         SimpleButton.Templates.warning(new CTxT("Help")).openLink("https://oth3r.one").size(150,15).hideText(false).build()
