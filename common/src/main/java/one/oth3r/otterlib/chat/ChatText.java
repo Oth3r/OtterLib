@@ -56,6 +56,22 @@ public abstract class ChatText<T, C extends ChatText<T, C>> {
         this.rainbow = old.rainbow;
     }
 
+    /**
+     * mirrors the properties from source if the properties haven't been changed in this object.
+     * properties that are skipped are: append, button & text.
+     */
+    public void copyIfChanged(C source) {
+        if (this.color == null) this.color = source.color;
+        if (this.clickEvent == null) this.clickEvent = source.clickEvent;
+        if (this.hoverEvent == null) this.hoverEvent = source.hoverEvent;
+        if (!this.bold) this.bold = source.bold;
+        if (!this.italic) this.italic = source.italic;
+        if (!this.strikethrough) this.strikethrough = source.strikethrough;
+        if (!this.underline) this.underline = source.underline;
+        if (!this.obfuscate) this.obfuscate = source.obfuscate;
+        if (!this.rainbow.equals(new Rainbow())) this.rainbow = source.rainbow;
+    }
+
     @Override
     public abstract C clone();
 
