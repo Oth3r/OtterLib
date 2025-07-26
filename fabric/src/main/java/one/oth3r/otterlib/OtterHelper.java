@@ -39,6 +39,11 @@ public class OtterHelper implements LoaderUtilities {
         return OtterLib.isClient();
     }
 
+    @Override
+    public boolean isInitialized() {
+        return false;
+    }
+
     /**
      * only works on client* <br/>
      * gets the localized text using the client side language system
