@@ -97,7 +97,7 @@ public class LoaderText<T extends LoaderText<T>> extends ChatText<MutableText, T
         if (this.button) output.append("[").setStyle(Style.EMPTY.withColor(Formatting.byCode('f')));
 
         output.append(this.text.styled(style -> style
-                .withColor(TextColor.fromRgb(this.color.getRGB()))
+                .withColor(TextColor.fromRgb((this.color == null ? Color.WHITE : this.color).getRGB()))
                 .withClickEvent(getClickEvent())
                 .withHoverEvent(getHoverEvent())
                 .withItalic(this.italic)
