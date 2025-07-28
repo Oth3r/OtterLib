@@ -5,6 +5,7 @@ import net.minecraft.util.Formatting;
 import one.oth3r.otterlib.base.Num;
 import one.oth3r.otterlib.chat.hover.HoverTxT;
 
+import java.awt.*;
 import java.net.URI;
 
 public class LoaderText<T extends LoaderText<T>> extends ChatText<MutableText, T> {
@@ -87,7 +88,7 @@ public class LoaderText<T extends LoaderText<T>> extends ChatText<MutableText, T
         return null;
     }
 
-    @Override
+    @Override @SuppressWarnings("unchecked")
     public MutableText b() {
         MutableText output = Text.literal("");
         if (this.rainbow.isEnabled()) {
@@ -105,19 +106,25 @@ public class LoaderText<T extends LoaderText<T>> extends ChatText<MutableText, T
                 .withStrikethrough(this.strikethrough)
                 .withUnderline(this.underline)
                 .withObfuscated(this.obfuscate)));
-        if (this.button) output.append("]").setStyle(Style.EMPTY.withColor(Formatting.byCode('f')));
 
-        // make sure everything including the button pieces are styled ?
-        output.styled(style -> style
-                .withClickEvent(getClickEvent())
-                .withHoverEvent(getHoverEvent())
-                .withItalic(this.italic)
-                .withBold(this.bold)
-                .withStrikethrough(this.strikethrough)
-                .withUnderline(this.underline)
-                .withObfuscated(this.obfuscate));
+        for (LoaderText<T> txt : this.append) {
+            txt.copyIfChanged((T) this);
+            output.append(txt.b());
+        }
 
-        for (LoaderText<T> txt : this.append) output.append(txt.b());
+        if (this.button) {
+            output.append("]").setStyle(Style.EMPTY.withColor(Formatting.byCode('f')));
+
+            // make sure everything including the button pieces are styled ?
+            output.styled(style -> style
+                    .withClickEvent(getClickEvent())
+                    .withHoverEvent(getHoverEvent())
+                    .withItalic(this.italic)
+                    .withBold(this.bold)
+                    .withStrikethrough(this.strikethrough)
+                    .withUnderline(this.underline)
+                    .withObfuscated(this.obfuscate));
+        }
 
         return output.copy();
     }
