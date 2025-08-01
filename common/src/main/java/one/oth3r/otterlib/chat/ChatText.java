@@ -24,7 +24,7 @@ public abstract class ChatText<T, C extends ChatText<T, C>> {
     protected Boolean underline = false;
     protected Boolean obfuscate = false;
     protected ArrayList<C> append = new ArrayList<>();
-    protected Rainbow rainbow = new Rainbow();
+    protected Rainbow rainbow = null;
 
     public ChatText() {
         text("");
@@ -69,7 +69,7 @@ public abstract class ChatText<T, C extends ChatText<T, C>> {
         if (!this.strikethrough) this.strikethrough = source.strikethrough;
         if (!this.underline) this.underline = source.underline;
         if (!this.obfuscate) this.obfuscate = source.obfuscate;
-        if (!this.rainbow.equals(new Rainbow())) this.rainbow = source.rainbow;
+        if (this.rainbow == null) this.rainbow = source.rainbow;
     }
 
     @Override
