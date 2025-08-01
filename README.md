@@ -37,6 +37,8 @@ player.sendMessage(new CTxT("Hello").color(Color.BLUE).bold(true).strikethrough(
 
 ### 📜 Custom Language Reader
 OtterLib provides a custom language reader that allows you to easily have server-side localization on all supported loaders. There is also support for a secondary location for locales for easy player overrides.
+\
+You can use the `LanguageReg` class to register your language files, and OtterLib will handle them for you.
 
 ### 🗃️ Robust file saving and loading
 Adds an interface that enables easy config file creation with support for saving, loading, and updating versions easily.
