@@ -1,6 +1,8 @@
 package one.oth3r.otterlib.chat;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Rainbow {
@@ -79,41 +81,35 @@ public class Rainbow {
     }
 
     /**
-     * makes a string ranbow using the varibles in the Rainbow class
-     * @return a colorized CTxT object
+     * makes a string rainbow using the variables in the Rainbow class
+     * @return a colorized rainbow string as a CTxT ArrayList<>
      */
     @SuppressWarnings("unchecked")
-    public <T extends LoaderText<T>> LoaderText<T> colorize(String target, LoaderText<T> settings) {
+    public <T extends LoaderText<T>> ArrayList<LoaderText<T>> colorize(String target) {
         // if not enabled, don't send a string
-        if (!enabled) return new LoaderText<>(target);
+        if (!enabled) return new ArrayList<>(List.of(new LoaderText<>(target)));
 
         // get the hue as the position
         float hue = position;
 
         // create the TxT to add too
-        LoaderText<T> rainbow = new LoaderText<>();
+        ArrayList<LoaderText<T>> rainbow = new ArrayList<>();
 
         // loop for the text length
         for (int i = 0; i < target.codePointCount(0, target.length()); i++) {
             // if empty, skip
             if (target.charAt(i) == ' ') {
-                rainbow.append(" ");
+                rainbow.add((LoaderText<T>) new LoaderText<>(" ").rainbow(null));
                 continue;
             }
 
             // get the color from the hue, sat and brightness
             Color color = Color.getHSBColor(hue / 360.0f, saturation, brightness);
 
-            rainbow.append((T) new LoaderText<>(Character.toString(target.codePointAt(i)))
-                    .color(color)
-                    // copy the settings of the settings CTxT EXCEPT for button
-                    .bold(settings.isBold())
-                    .italic(settings.isItalic())
-                    .strikethrough(settings.isStrikethrough())
-                    .underline(settings.isUnderline())
-                    .obfuscate(settings.isObfuscated())
-                    .click(settings.getClick())
-                    .hover(settings.getHover()));
+            // set a null rainbow so it doesn't get overwritten when copy changed methods runs
+            T letter = (T) new LoaderText<>(Character.toString(target.codePointAt(i)))
+                    .color(color).rainbow(null);
+            rainbow.add(letter);
 
             // bump the hue
             hue = (hue+stepSize) % 360f;
