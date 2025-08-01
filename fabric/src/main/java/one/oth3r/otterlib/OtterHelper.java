@@ -6,6 +6,7 @@ import one.oth3r.otterlib.base.LoaderUtilities;
 import one.oth3r.otterlib.base.OtterLogger;
 import one.oth3r.otterlib.chat.CTxT;
 import one.oth3r.otterlib.chat.LoaderText;
+import one.oth3r.otterlib.chat.Wrapper;
 
 public class OtterHelper implements LoaderUtilities {
     @Override
@@ -48,5 +49,15 @@ public class OtterHelper implements LoaderUtilities {
     @Override
     public CTxT getClientTranslatable(String key, Object... args) {
         return new CTxT(Text.translatable(key, args));
+    }
+
+    /**
+     * Gets the default wrapper for the ChatText system.
+     *
+     * @return the default Wrapper
+     */
+    @Override
+    public Wrapper<?, ?> getDefaultWrapper() {
+        return new Wrapper<>(new CTxT("["),new CTxT("]"));
     }
 }

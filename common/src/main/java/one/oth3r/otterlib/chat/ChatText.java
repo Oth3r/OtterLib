@@ -1,5 +1,6 @@
 package one.oth3r.otterlib.chat;
 
+import one.oth3r.otterlib.Assets;
 import one.oth3r.otterlib.chat.click.ClickAction;
 import one.oth3r.otterlib.chat.hover.HoverAction;
 
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
  */
 public abstract class ChatText<T, C extends ChatText<T, C>> {
     protected T text;
-    protected Boolean button = false;
+    protected Wrapper<T,C> wrapper = null;
     protected Color color = null;
     protected ClickAction clickEvent = null;
     protected HoverAction<?> hoverEvent = null;
@@ -44,7 +45,7 @@ public abstract class ChatText<T, C extends ChatText<T, C>> {
 
     public void copyFromObject(C old) {
         this.text = old.text;
-        this.button = old.button;
+        this.wrapper = old.wrapper;
         this.color = old.color;
         this.clickEvent = old.clickEvent;
         this.hoverEvent = old.hoverEvent;
@@ -52,7 +53,7 @@ public abstract class ChatText<T, C extends ChatText<T, C>> {
         this.italic = old.italic;
         this.strikethrough = old.strikethrough;
         this.underline = old.underline;
-        this.append = old.append.stream().map(ChatText::clone).collect(Collectors.toCollection(ArrayList::new));;
+        this.append = old.append.stream().map(ChatText::clone).collect(Collectors.toCollection(ArrayList::new));
         this.rainbow = old.rainbow;
     }
 
@@ -84,8 +85,14 @@ public abstract class ChatText<T, C extends ChatText<T, C>> {
 
     public abstract C text(C text);
 
-    public C btn(Boolean button) {
-        this.button = button;
+    public C wrapper(Wrapper<T, C> wrapper) {
+        this.wrapper = wrapper;
+        return self();
+    }
+
+    @SuppressWarnings("unchecked")
+    public C wrapper() {
+        this.wrapper = (Wrapper<T, C>) Assets.HELPER.getDefaultWrapper();
         return self();
     }
 
@@ -180,10 +187,6 @@ public abstract class ChatText<T, C extends ChatText<T, C>> {
 
     public T getText() {
         return text;
-    }
-
-    public Boolean isBtn() {
-        return button;
     }
 
     public Color getColor() {

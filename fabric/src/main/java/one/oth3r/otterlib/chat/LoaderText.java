@@ -1,12 +1,12 @@
 package one.oth3r.otterlib.chat;
 
 import net.minecraft.text.*;
-import net.minecraft.util.Formatting;
 import one.oth3r.otterlib.base.Num;
 import one.oth3r.otterlib.chat.hover.HoverTxT;
 
 import java.awt.*;
 import java.net.URI;
+import java.util.function.UnaryOperator;
 
 public class LoaderText<T extends LoaderText<T>> extends ChatText<MutableText, T> {
     public LoaderText() {
@@ -91,13 +91,7 @@ public class LoaderText<T extends LoaderText<T>> extends ChatText<MutableText, T
     @Override @SuppressWarnings("unchecked")
     public MutableText b() {
         MutableText output = Text.literal("");
-        if (this.rainbow.isEnabled()) {
-            this.text = this.rainbow.colorize(text.getString(), this).b();
-        }
-
-        if (this.button) output.append("[").setStyle(Style.EMPTY.withColor(Formatting.byCode('f')));
-
-        output.append(this.text.styled(style -> style
+        UnaryOperator<Style> styleUpdater = style -> style
                 .withColor(TextColor.fromRgb((this.color == null ? Color.WHITE : this.color).getRGB()))
                 .withClickEvent(getClickEvent())
                 .withHoverEvent(getHoverEvent())
@@ -105,25 +99,26 @@ public class LoaderText<T extends LoaderText<T>> extends ChatText<MutableText, T
                 .withBold(this.bold)
                 .withStrikethrough(this.strikethrough)
                 .withUnderline(this.underline)
-                .withObfuscated(this.obfuscate)));
+                .withObfuscated(this.obfuscate);
+
+        if (this.wrapper != null) {
+            output.append(wrapper.front().hover(this.hoverEvent).click(this.clickEvent).b());
+        }
+
+        if (this.rainbow != null && this.rainbow.isEnabled()) {
+            this.rainbow.colorize(text.getString()).forEach(text -> output.append(text.b().styled(styleUpdater)));
+        } else {
+            output.append(this.text.styled(styleUpdater));
+        }
+
 
         for (LoaderText<T> txt : this.append) {
             txt.copyIfChanged((T) this);
             output.append(txt.b());
         }
 
-        if (this.button) {
-            output.append("]").setStyle(Style.EMPTY.withColor(Formatting.byCode('f')));
-
-            // make sure everything including the button pieces are styled ?
-            output.styled(style -> style
-                    .withClickEvent(getClickEvent())
-                    .withHoverEvent(getHoverEvent())
-                    .withItalic(this.italic)
-                    .withBold(this.bold)
-                    .withStrikethrough(this.strikethrough)
-                    .withUnderline(this.underline)
-                    .withObfuscated(this.obfuscate));
+        if (this.wrapper != null) {
+            output.append(wrapper.back().hover(this.hoverEvent).click(this.clickEvent).b());
         }
 
         return output.copy();

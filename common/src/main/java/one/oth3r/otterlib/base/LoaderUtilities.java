@@ -2,6 +2,7 @@ package one.oth3r.otterlib.base;
 
 import one.oth3r.otterlib.chat.CTxT;
 import one.oth3r.otterlib.chat.LoaderText;
+import one.oth3r.otterlib.chat.Wrapper;
 
 public interface LoaderUtilities {
     /**
@@ -32,4 +33,10 @@ public interface LoaderUtilities {
      * gets the localized text using the client side language system
      */
     CTxT getClientTranslatable(String key, Object... args);
+
+    /**
+     * Gets the default wrapper for the ChatText system.
+     * @return the default Wrapper
+     */
+    Wrapper<?,?> getDefaultWrapper();
 }
