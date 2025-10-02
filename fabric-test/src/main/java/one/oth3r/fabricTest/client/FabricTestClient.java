@@ -52,13 +52,14 @@ public class FabricTestClient implements ClientModInitializer {
     }
 
     private static KeyBinding keyBinding;
+    private static final KeyBinding.Category TEST_CATEGORY = KeyBinding.Category.create(Identifier.of("test", "main"));
 
     private static void register() {
         keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.fabrictest.keybind.test",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_Z,
-                "category.fabrictest.test"
+                TEST_CATEGORY
         ));
 
     }

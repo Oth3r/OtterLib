@@ -59,27 +59,13 @@ public class ConfigsListWidget extends ElementListWidget<ConfigsListWidget.Confi
             return List.of(textureButton);
         }
 
-        /**
-         * Renders an entry in a list.
-         *
-         * @param context
-         * @param index        the index of the entry
-         * @param y            the Y coordinate of the entry
-         * @param x            the X coordinate of the entry
-         * @param entryWidth   the width of the entry
-         * @param entryHeight  the height of the entry
-         * @param mouseX       the X coordinate of the mouse
-         * @param mouseY       the Y coordinate of the mouse
-         * @param hovered      whether the mouse is hovering over the entry
-         * @param tickProgress
-         */
         @Override
-        public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickProgress) {
+        public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
             int i = (this.parent.width/2) - (textureButton.getWidth()/2);
 
-            int j = y - 2;
+            int j = this.getContentY() - 2;
             textureButton.setPosition(i, j);
-            textureButton.render(context, mouseX, mouseY, tickProgress);
+            textureButton.render(context, mouseX, mouseY, deltaTicks);
         }
     }
 }
