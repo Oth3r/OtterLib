@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom'
+    id 'net.fabricmc.fabric-loom-remap'
     id 'maven-publish'
     id "me.modmuss50.mod-publish-plugin" version "0.8.4"
     id "com.gradleup.shadow"
@@ -33,7 +33,6 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
 }
 
 processResources {
