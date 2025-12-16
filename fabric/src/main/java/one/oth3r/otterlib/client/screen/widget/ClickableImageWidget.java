@@ -1,9 +1,11 @@
 package one.oth3r.otterlib.client.screen.widget;
 
+import net.minecraft.client.font.DrawnTextConsumer;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.util.Identifier;
 import one.oth3r.otterlib.chat.CTxT;
 import one.oth3r.otterlib.client.screen.utl.CustomImage;
@@ -72,7 +74,7 @@ public class ClickableImageWidget extends ButtonWidget {
     }
 
     @Override
-    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+    protected void drawIcon(DrawContext context, int mouseX, int mouseY, float delta) {
         context.drawTexture(RenderPipelines.GUI_TEXTURED, image,
                 this.getX(), this.getY(), 0.0f, 0.0f, this.getWidth(), this.getHeight(), this.getWidth(), this.getHeight());
 
@@ -91,9 +93,12 @@ public class ClickableImageWidget extends ButtonWidget {
                     this.getWidth(), toolTipHeight);
             if (hoverTime >= MAX_TIME) {
                 assert hoverTxT != null; // cant be null because hovertime only goes up if hoverTxT is not null
-                drawScrollableText(context, textRenderer, hoverTxT.b(),
-                        getX() + 4, toolTipY, getX() + this.getWidth() - 4,
-                        toolTipY + toolTipHeight, 0xFFFFFFFF);
+                int padding = 4;
+                int textX = getX() + padding;
+                int textY = toolTipY + (toolTipHeight - textRenderer.fontHeight) / 2;
+                context.drawText(textRenderer, hoverTxT.b(), textX, textY, 0xFFFFFF, false);
+                context.getHoverListener(this, DrawContext.HoverType.NONE)
+                        .text(hoverTxT.b(),textX, getX()+width-padding, toolTipY, getY()+this.getHeight());
             }
         }
     }

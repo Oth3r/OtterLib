@@ -1,23 +1,22 @@
 package one.oth3r.otterlib.client.screen.widget;
 
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.Text;
+import net.minecraft.text.MutableText;
 import net.minecraft.util.Identifier;
 import one.oth3r.otterlib.client.screen.utl.CustomImage;
 import org.jetbrains.annotations.Nullable;
 
-public class TextureButtonWidget extends ButtonWidget {
+public class TextureButtonWidget extends ButtonWidget.Text {
     //todo add texture offset
     protected final Identifier texture;
     protected final int textureWidth;
     protected final int textureHeight;
     protected final boolean tooltip;
 
-    TextureButtonWidget(int x, int y, int width, int height, Text message, PressAction onPress,
+    TextureButtonWidget(int x, int y, int width, int height, MutableText message, PressAction onPress,
                         Identifier texture, int textureWidth, int textureHeight,
                         @Nullable ButtonWidget.NarrationSupplier narrationSupplier,
                         boolean tooltip, boolean disabled) {
@@ -36,8 +35,9 @@ public class TextureButtonWidget extends ButtonWidget {
     }
 
     @Override
-    public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.renderWidget(context, mouseX, mouseY, delta);
+    protected void drawIcon(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.drawButton(context);
+        if (!this.tooltip) super.drawLabel(context.getHoverListener(this, DrawContext.HoverType.NONE));
 
         if (texture == null) return;
 
@@ -47,22 +47,18 @@ public class TextureButtonWidget extends ButtonWidget {
         context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, this.texture, x, y, this.textureWidth, this.textureHeight, color);
     }
 
-    @Override
-    public void drawMessage(DrawContext context, TextRenderer textRenderer, int color) {
-        if (!this.tooltip) super.drawMessage(context, textRenderer, color);
-    }
 
     /**
      * makes a new textured button widget that is 20x20, that takes an image that is 15x15
      */
-    public static Builder createIconButton(Text buttonText, PressAction pressAction, Identifier texture) {
+    public static Builder createIconButton(MutableText buttonText, PressAction pressAction, Identifier texture) {
         return new Builder(buttonText,pressAction).hideText(true).size(20,20)
                 .texture(texture,15,15);
     }
 
 
     public static class Builder {
-        private final Text text;
+        private final MutableText text;
         private PressAction onPress = null;
         private boolean hideText;
 
@@ -87,7 +83,7 @@ public class TextureButtonWidget extends ButtonWidget {
          * @param text the button text
          * @param onPress the button's press action
          */
-        public Builder(Text text, PressAction onPress) {
+        public Builder(MutableText text, PressAction onPress) {
             this.text = text;
             this.onPress = onPress;
         }
@@ -96,7 +92,7 @@ public class TextureButtonWidget extends ButtonWidget {
          * creates a builder with just the button text (be sure to make it disabled or add a pressAction!)
          * @param text the button text
          */
-        public Builder(Text text) {
+        public Builder(MutableText text) {
             this.text = text;
         }
 
