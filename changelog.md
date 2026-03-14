@@ -1,9 +1,8 @@
-# b0.2.2.1
-* increased supported version range (eg. 1.21.8 now runs on 1.21.6 and 1.21.7 as well) [Fabric]
-
-# b0.2.2.0
-A new file registration system is here! (for both config and language files)
-\
-OtterLib will now handle storing, loading and saving config files! Auto loading and saving can be configured, and the file will be registered via queried via ModID and FileID. 
-* added a config file registration system (CustomFileReg)
-* added a language file registration system (LanguageReg)
+# b0.3.0.0
+* added the nothing click action
+* added the HoverActions class
+* added another superclass to CTxT for better adaptability
+* make color default to null, and null default to white
+* make rainbow default to null
+* switch from button to chat wrapper system
+* other ChatText changes and improvements
