@@ -6,7 +6,7 @@ plugins {
     id "com.gradleup.shadow"
 }
 
-version = "${project.spigot_version}-spigot"
+version = "${project.mod_version}-spigot"
 group = project.maven_group
 
 repositories {

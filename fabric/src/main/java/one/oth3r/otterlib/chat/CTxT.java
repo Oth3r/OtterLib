@@ -15,6 +15,6 @@ public class CTxT extends LoaderText<CTxT> {
     }
 
     public CTxT(MutableText text) {
-        super(text);
+        super(text.copy());
     }
 }

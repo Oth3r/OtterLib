@@ -3,7 +3,6 @@ package one.oth3r.otterlib.file;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import one.oth3r.otterlib.Assets;
-import one.oth3r.otterlib.chat.CTxT;
 import one.oth3r.otterlib.chat.LoaderText;
 
 import java.io.*;
@@ -141,9 +140,9 @@ public class LanguageReader {
      * retrieves a translation from the client, if on the client, and from the loaded translation if not (useful for client sided text and UI)
      * @param key the translation key
      * @param args the arguments for the translation
-     * @return the CTxT of the translation
+     * @return the LoaderText of the translation
      */
-    public CTxT dynamicTranslatable(String key, Object... args) {
+    public LoaderText<?> dynamicTranslatable(String key, Object... args) {
         if (Assets.HELPER.isClient()) // client side, should attempt to use the client's language - might be different from the config language
             return Assets.HELPER.getClientTranslatable(key, args);
         else // not client side
