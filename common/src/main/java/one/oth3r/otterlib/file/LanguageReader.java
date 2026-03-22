@@ -142,9 +142,10 @@ public class LanguageReader {
      * @param args the arguments for the translation
      * @return the LoaderText of the translation
      */
-    public LoaderText<?> dynamicTranslatable(String key, Object... args) {
+    @SuppressWarnings("unchecked")
+    public <T extends LoaderText<T>> T dynamicTranslatable(String key, Object... args) {
         if (Assets.HELPER.isClient()) // client side, should attempt to use the client's language - might be different from the config language
-            return Assets.HELPER.getClientTranslatable(key, args);
+            return (T) Assets.HELPER.getClientTranslatable(key, args);
         else // not client side
             return translatable(key, args);
     }
