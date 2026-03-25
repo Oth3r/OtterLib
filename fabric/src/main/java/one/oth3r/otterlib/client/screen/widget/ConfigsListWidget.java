@@ -1,18 +1,18 @@
 package one.oth3r.otterlib.client.screen.widget;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.widget.ElementListWidget;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import one.oth3r.otterlib.client.screen.ConfigScreen;
 
 import java.util.List;
 
-public class ConfigsListWidget extends ElementListWidget<ConfigsListWidget.ConfigEntry> {
+public class ConfigsListWidget extends ContainerObjectSelectionList<ConfigsListWidget.ConfigEntry> {
     protected final ConfigScreen configScreen;
 
-    public ConfigsListWidget(MinecraftClient minecraftClient, ConfigScreen configScreen) {
+    public ConfigsListWidget(Minecraft minecraftClient, ConfigScreen configScreen) {
         super(minecraftClient, configScreen.width, configScreen.layout.getContentHeight(), configScreen.layout.getHeaderHeight(), 32);
         this.configScreen = configScreen;
     }
@@ -32,7 +32,7 @@ public class ConfigsListWidget extends ElementListWidget<ConfigsListWidget.Confi
         }
     }
 
-    public static class ConfigEntry extends ElementListWidget.Entry<ConfigEntry> {
+    public static class ConfigEntry extends ContainerObjectSelectionList.Entry<ConfigEntry> {
         private final TextureButtonWidget textureButton;
         private final ConfigsListWidget parent;
 
@@ -47,7 +47,7 @@ public class ConfigsListWidget extends ElementListWidget<ConfigsListWidget.Confi
         }
 
         @Override
-        public List<? extends Selectable> selectableChildren() {
+        public List<? extends NarratableEntry> narratables() {
             return List.of(textureButton);
         }
 
@@ -55,17 +55,17 @@ public class ConfigsListWidget extends ElementListWidget<ConfigsListWidget.Confi
          * Gets a list of all child GUI elements.
          */
         @Override
-        public List<? extends Element> children() {
+        public List<? extends GuiEventListener> children() {
             return List.of(textureButton);
         }
 
         @Override
-        public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+        public void extractContent(GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float delta) {
             int i = (this.parent.width/2) - (textureButton.getWidth()/2);
 
             int j = this.getContentY() - 2;
             textureButton.setPosition(i, j);
-            textureButton.render(context, mouseX, mouseY, deltaTicks);
+            textureButton.extractContents(graphics, mouseX, mouseY, delta);
         }
     }
 }

@@ -1,12 +1,12 @@
 package one.oth3r.otterlib.client.screen;
 
-import net.minecraft.client.gui.screen.ConfirmLinkScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
-import net.minecraft.client.gui.widget.SimplePositioningWidget;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.screens.ConfirmLinkScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.layouts.LinearLayout;
+import net.minecraft.client.gui.layouts.FrameLayout;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
 import one.oth3r.otterlib.Assets;
 import one.oth3r.otterlib.chat.CTxT;
@@ -24,83 +24,83 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen imp
     protected T file;
     protected TextureButtonWidget revertButton, resetButton;
 
-    private final DirectionalLayoutWidget layout = DirectionalLayoutWidget.vertical().spacing(6);
+    private final LinearLayout layout = LinearLayout.vertical().spacing(6);
 
     protected long tickTime = 0;
     protected boolean focused = true;
 
     public UnderConstructionScreen(Screen parent, T file) {
-        super(Text.translatable("otterlib.screen.config_manager"));
+        super(Component.translatable("otterlib.screen.config_manager"));
         this.parent = parent;
         this.file = file;
     }
 
     public UnderConstructionScreen(T file) {
-        super(Text.translatable("otterlib.screen.config_manager"));
+        super(Component.translatable("otterlib.screen.config_manager"));
         this.parent = null;
         this.file = file;
     }
 
     @Override
     protected void init() {
-        this.layout.getMainPositioner().alignHorizontalCenter();
-        CTxT text = new CTxT(Text.translatable("otterlib.gui.hover.credit","@bunnestbun"));
-        layout.add(new ClickableImageWidget.Builder(text, this.textRenderer,
-                new CustomImage(Identifier.of(Assets.ID, "textures/gui/under_construction.png"),140,140))
-                .onHover(text).onPress(ConfirmLinkScreen.opening(this, URI.create("https://www.instagram.com/bunnestbun/"))).build());
+        this.layout.defaultCellSetting().alignHorizontallyCenter();
+        CTxT text = new CTxT(Component.translatable("otterlib.gui.hover.credit","@bunnestbun"));
+        layout.addChild(new ClickableImageWidget.Builder(text, this.font,
+                new CustomImage(Identifier.fromNamespaceAndPath(Assets.ID, "textures/gui/under_construction.png"),140,140))
+                .onHover(text).onPress(ConfirmLinkScreen.confirmLink(this, URI.create("https://www.instagram.com/bunnestbun/"))).build());
 
         initActionButtons();
         initFooter();
 
-        this.layout.forEachChild(this::addDrawableChild);
-        this.refreshWidgetPositions();
+        this.layout.visitWidgets(this::addRenderableWidget);
+        this.repositionElements();
     }
 
     private void initActionButtons() {
-        DirectionalLayoutWidget actionLayout = layout.add(DirectionalLayoutWidget.horizontal().spacing(8));
-        actionLayout.add(TextureButtonWidget.createIconButton(Text.translatable("otterlib.gui.config.button.file"),
-                btn -> Util.getOperatingSystem().open(this.file.getFile()),
-                Identifier.of(Assets.ID,"icon/file")).build());
+        LinearLayout actionLayout = layout.addChild(LinearLayout.horizontal().spacing(8));
+        actionLayout.addChild(TextureButtonWidget.createIconButton(Component.translatable("otterlib.gui.config.button.file"),
+                btn -> Util.getPlatform().openFile(this.file.getFile()),
+                Identifier.fromNamespaceAndPath(Assets.ID,"icon/file")).build());
 
-        actionLayout.add(TextureButtonWidget.createIconButton(
-                Text.translatable("otterlib.gui.config.button.folder"),
-                btn -> Util.getOperatingSystem().open(Paths.get(this.file.getFile().getParent())),
-                Identifier.of(Assets.ID,"icon/folder")).build());
+        actionLayout.addChild(TextureButtonWidget.createIconButton(
+                Component.translatable("otterlib.gui.config.button.folder"),
+                btn -> Util.getPlatform().openPath(Paths.get(this.file.getFile().getParent())),
+                Identifier.fromNamespaceAndPath(Assets.ID,"icon/folder")).build());
 
-        resetButton = actionLayout.add(TextureButtonWidget.createIconButton(
-                Text.translatable("otterlib.gui.config.button.reset"),
+        resetButton = actionLayout.addChild(TextureButtonWidget.createIconButton(
+                Component.translatable("otterlib.gui.config.button.reset"),
                 btn -> {
                     this.file.reset();
                     this.file.save();
                     updateButtons();
                 },
-                Identifier.of(Assets.ID, "icon/file_reset")).build());
+                Identifier.fromNamespaceAndPath(Assets.ID, "icon/file_reset")).build());
 
 
-        revertButton = actionLayout.add(TextureButtonWidget.createIconButton(
-                Text.translatable("otterlib.gui.config.button.revert"),
+        revertButton = actionLayout.addChild(TextureButtonWidget.createIconButton(
+                Component.translatable("otterlib.gui.config.button.revert"),
                 btn -> {
                     this.file.save();
                     updateButtons();
                 },
-                Identifier.of(Assets.ID, "icon/revert")).disabled(true).build());
+                Identifier.fromNamespaceAndPath(Assets.ID, "icon/revert")).disabled(true).build());
 
 
     }
 
     private void initFooter() {
-        DirectionalLayoutWidget footerLayout = layout.add(DirectionalLayoutWidget.horizontal().spacing(8));
+        LinearLayout footerLayout = layout.addChild(LinearLayout.horizontal().spacing(8));
 
-        footerLayout.add(this.addDrawableChild(new ButtonWidget.Builder(Text.translatable("otterlib.gui.config.button.save_close"),
+        footerLayout.addChild(this.addRenderableWidget(new Button.Builder(Component.translatable("otterlib.gui.config.button.save_close"),
                 (button) -> {
-                    this.client.setScreen(parent);
+                    this.minecraft.setScreen(parent);
                 }).size(140,20).build()));
 
-        footerLayout.add(this.addDrawableChild(new ButtonWidget.Builder(Text.translatable("otterlib.gui.config.button.cancel"),
+        footerLayout.addChild(this.addRenderableWidget(new Button.Builder(Component.translatable("otterlib.gui.config.button.cancel"),
                 (button) -> {
                     this.file.load();
                     this.file.save();
-                    this.client.setScreen(parent);
+                    this.minecraft.setScreen(parent);
                 }).size(140,20).build()));
     }
 
@@ -133,18 +133,18 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen imp
     }
 
     @Override
-    protected void refreshWidgetPositions() {
-        this.layout.refreshPositions();
-        SimplePositioningWidget.setPos(this.layout, this.getNavigationFocus());
+    protected void repositionElements() {
+        this.layout.arrangeElements();
+        FrameLayout.centerInRectangle(this.layout, this.getRectangle());
         updateButtons();
     }
 
     @Override
-    public void close() {
+    public void onClose() {
         if (parent != null) {
-            this.client.setScreen(parent);
+            this.minecraft.setScreen(parent);
         } else {
-            super.close();
+            super.onClose();
         }
     }
 

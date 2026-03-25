@@ -1,6 +1,6 @@
 package one.oth3r.otterlib.chat;
 
-import net.minecraft.text.MutableText;
+import net.minecraft.network.chat.MutableComponent;
 
 public class CTxT extends LoaderText<CTxT> {
     public CTxT() {
@@ -14,7 +14,7 @@ public class CTxT extends LoaderText<CTxT> {
         super(text);
     }
 
-    public CTxT(MutableText text) {
+    public CTxT(MutableComponent text) {
         super(text.copy());
     }
 }

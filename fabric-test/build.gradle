@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom'
+    id 'net.fabricmc.fabric-loom'
     id 'maven-publish'
 }
 
@@ -23,14 +23,12 @@ repositories {
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    implementation "one.oth3r:otterlib:${project.otterlib_version}-fabric"
 
-    modImplementation "one.oth3r:otterlib:${project.otterlib_version}-fabric"
-
-    modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+//    modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 }
 
 processResources {

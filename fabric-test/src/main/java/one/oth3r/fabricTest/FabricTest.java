@@ -18,7 +18,7 @@ public class FabricTest implements ModInitializer {
         CustomFileReg.registerFile(MOD_ID, new CustomFileReg.FileEntry(TestFile.ID, new TestFile(), true, true));
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            handler.player.sendMessage(new CTxT()
+            handler.player.sendSystemMessage(new CTxT()
                     .append(new CTxT("Hello").color(Color.BLUE).bold(true).strikethrough(true).wrapper())
                     .append(new CTxT("World!!!!!!!!!").rainbow(new Rainbow(true)).underline(true).italic(true)
                             .hover(HoverAction.of(new CTxT("man this is hovering rn").bold())))

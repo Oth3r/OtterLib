@@ -1,7 +1,7 @@
 package one.oth3r.otterlib;
 
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
 import one.oth3r.otterlib.base.LoaderUtilities;
 import one.oth3r.otterlib.base.OtterLogger;
 import one.oth3r.otterlib.chat.CTxT;
@@ -24,7 +24,7 @@ public class OtterHelper implements LoaderUtilities {
     @Override @SuppressWarnings("unchecked")
     public <T extends LoaderText<T>> T getTxTFromObj(Object obj) {
         if (obj instanceof LoaderText<?>) return (T) new LoaderText<>(((T) obj).b());
-        else if (obj instanceof Text) return (T) new LoaderText<>((MutableText) obj);
+        else if (obj instanceof Component) return (T) new LoaderText<>((MutableComponent) obj);
         // else, try to convert into a string
         else return (T) new LoaderText<>(String.valueOf(obj));
     }
@@ -48,7 +48,7 @@ public class OtterHelper implements LoaderUtilities {
      */
     @Override
     public CTxT getClientTranslatable(String key, Object... args) {
-        return new CTxT(Text.translatable(key, args));
+        return new CTxT(Component.translatable(key, args));
     }
 
     /**

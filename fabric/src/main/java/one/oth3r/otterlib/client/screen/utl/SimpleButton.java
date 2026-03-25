@@ -1,8 +1,8 @@
 package one.oth3r.otterlib.client.screen.utl;
 
-import net.minecraft.client.gui.screen.ConfirmLinkScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.screens.ConfirmLinkScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.Identifier;
 import one.oth3r.otterlib.Assets;
 import one.oth3r.otterlib.client.screen.SetClientScreen;
 import one.oth3r.otterlib.client.screen.SetParentScreen;
@@ -33,15 +33,15 @@ public abstract class SimpleButton {
     public static class Templates {
         public static Builder donate(CTxT text) {
             return new Builder(text)
-                    .miniIcon(new CustomImage(Identifier.of(Assets.ID, "icon/donate"),15,15));
+                    .miniIcon(new CustomImage(Identifier.fromNamespaceAndPath(Assets.ID, "icon/donate"),15,15));
         }
         public static Builder warning(CTxT text) {
             return new Builder(text)
-                    .miniIcon(new CustomImage(Identifier.of(Assets.ID, "icon/warning"),15,15));
+                    .miniIcon(new CustomImage(Identifier.fromNamespaceAndPath(Assets.ID, "icon/warning"),15,15));
         }
         public static Builder wiki(CTxT text) {
             return new Builder(text)
-                    .miniIcon(new CustomImage(Identifier.of(Assets.ID, "icon/wiki"),15,15));
+                    .miniIcon(new CustomImage(Identifier.fromNamespaceAndPath(Assets.ID, "icon/wiki"),15,15));
         }
         public static Builder done(CTxT text) {
             return new Builder(text).close();
@@ -228,7 +228,7 @@ public abstract class SimpleButton {
         @Override
         public TextureButtonWidget build(Screen openScreen) {
             TextureButtonWidget.Builder builder = new TextureButtonWidget.Builder(text.b()).size(width,height)
-                    .onPress(b -> openScreen.close()).hideText(hideText);
+                    .onPress(b -> openScreen.onClose()).hideText(hideText);
             if (customImage != null) return builder.texture(customImage).build();
             return builder.build();
         }
@@ -258,7 +258,7 @@ public abstract class SimpleButton {
 
         @Override
         public TextureButtonWidget build(Screen openScreen) {
-            TextureButtonWidget.Builder builder = new TextureButtonWidget.Builder(text.b(),ConfirmLinkScreen.opening(openScreen,uri))
+            TextureButtonWidget.Builder builder = new TextureButtonWidget.Builder(text.b(), ConfirmLinkScreen.confirmLink(openScreen,uri))
                     .size(width,height).hideText(hideText);
             if (customImage != null) return builder.texture(customImage).build();
             return builder.build();

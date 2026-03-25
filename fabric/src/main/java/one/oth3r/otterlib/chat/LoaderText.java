@@ -1,6 +1,11 @@
 package one.oth3r.otterlib.chat;
 
-import net.minecraft.text.*;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import one.oth3r.otterlib.base.Num;
 import one.oth3r.otterlib.chat.hover.HoverTxT;
 
@@ -8,7 +13,7 @@ import java.awt.*;
 import java.net.URI;
 import java.util.function.UnaryOperator;
 
-public class LoaderText<T extends LoaderText<T>> extends ChatText<MutableText, T> {
+public class LoaderText<T extends LoaderText<T>> extends ChatText<MutableComponent, T> {
     public LoaderText() {
         super();
     }
@@ -21,7 +26,7 @@ public class LoaderText<T extends LoaderText<T>> extends ChatText<MutableText, T
         super(text);
     }
 
-    public LoaderText(MutableText text) {
+    public LoaderText(MutableComponent text) {
         super(text);
     }
 
@@ -32,7 +37,7 @@ public class LoaderText<T extends LoaderText<T>> extends ChatText<MutableText, T
 
     @Override @SuppressWarnings("unchecked")
     public T text(String text) {
-        this.text = Text.literal(text);
+        this.text = Component.literal(text);
         return (T) this;
     }
 
@@ -42,7 +47,7 @@ public class LoaderText<T extends LoaderText<T>> extends ChatText<MutableText, T
      * @param text
      */
     @Override @SuppressWarnings("unchecked")
-    public T text(MutableText text) {
+    public T text(MutableComponent text) {
         this.text = text.copy();
         return (T) this;
     }
@@ -60,7 +65,7 @@ public class LoaderText<T extends LoaderText<T>> extends ChatText<MutableText, T
     }
 
     @Override @SuppressWarnings("unchecked")
-    public T append(MutableText append) {
+    public T append(MutableComponent append) {
         this.append.add((T) new LoaderText<>(append));
         return (T) this;
     }
@@ -89,8 +94,8 @@ public class LoaderText<T extends LoaderText<T>> extends ChatText<MutableText, T
     }
 
     @Override @SuppressWarnings("unchecked")
-    public MutableText b() {
-        MutableText output = Text.literal("");
+    public MutableComponent b() {
+        MutableComponent output = Component.literal("");
         UnaryOperator<Style> styleUpdater = style -> style
                 .withColor(TextColor.fromRgb((this.color == null ? Color.WHITE : this.color).getRGB()))
                 .withClickEvent(getClickEvent())
@@ -98,7 +103,7 @@ public class LoaderText<T extends LoaderText<T>> extends ChatText<MutableText, T
                 .withItalic(this.italic)
                 .withBold(this.bold)
                 .withStrikethrough(this.strikethrough)
-                .withUnderline(this.underline)
+                .withUnderlined(this.underline)
                 .withObfuscated(this.obfuscate);
 
         if (this.wrapper != null) {
@@ -106,9 +111,9 @@ public class LoaderText<T extends LoaderText<T>> extends ChatText<MutableText, T
         }
 
         if (this.rainbow != null && this.rainbow.isEnabled()) {
-            this.rainbow.colorize(text.getString()).forEach(text -> output.append(text.b().styled(styleUpdater)));
+            this.rainbow.colorize(text.getString()).forEach(text -> output.append(text.b().withStyle(styleUpdater)));
         } else {
-            output.append(this.text.styled(styleUpdater));
+            output.append(this.text.withStyle(styleUpdater));
         }
 
 

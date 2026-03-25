@@ -16,6 +16,6 @@ include('fabric')
 //include('paper')
 
 // tests
-//include('fabric-test')
+include('fabric-test')
 //include('spigot-test')
 //include('paper-test')

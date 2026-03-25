@@ -1,24 +1,22 @@
 package one.oth3r.otterlib.client.screen.widget;
 
-import net.minecraft.client.font.DrawnTextConsumer;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.TextWidget;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.resources.Identifier;
 import one.oth3r.otterlib.chat.CTxT;
 import one.oth3r.otterlib.client.screen.utl.CustomImage;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-public class ClickableImageWidget extends ButtonWidget {
-    private final Identifier hoverBackground = Identifier.ofVanilla("textures/gui/sprites/widget/button_disabled.png");
+public class ClickableImageWidget extends Button {
+    private final Identifier hoverBackground = Identifier.withDefaultNamespace("textures/gui/sprites/widget/button_disabled.png");
 
     private final Identifier image;
     private final CTxT hoverTxT;
-    private final TextRenderer textRenderer;
+    private final Font textRenderer;
 
     private float hoverTime = 0;
     private final float MAX_TIME = 2.0f;
@@ -35,7 +33,7 @@ public class ClickableImageWidget extends ButtonWidget {
      * @param onPress the press action of the widget
      * @param hoverTxT the text to display when hovering over the widget
      */
-    public ClickableImageWidget(int x, int y, int width, int height, CTxT text, TextRenderer textRenderer, Identifier image, PressAction onPress, CTxT hoverTxT) {
+    public ClickableImageWidget(int x, int y, int width, int height, CTxT text, Font textRenderer, Identifier image, OnPress onPress, CTxT hoverTxT) {
         super(x, y, width, height, text.b(), onPress, Supplier::get);
         this.image = image;
         this.hoverTxT = hoverTxT;
@@ -55,7 +53,7 @@ public class ClickableImageWidget extends ButtonWidget {
      * @param onPress the press action of the widget
      * @param hoverTxT the text to display when hovering over the widget
      */
-    public ClickableImageWidget(int x, int y, CTxT text, TextRenderer textRenderer, CustomImage customImage, PressAction onPress, CTxT hoverTxT) {
+    public ClickableImageWidget(int x, int y, CTxT text, Font textRenderer, CustomImage customImage, OnPress onPress, CTxT hoverTxT) {
         super(x, y, customImage.getWidth(), customImage.getHeight(), text.b(), onPress, Supplier::get);
         this.image = customImage.getImage();
         this.hoverTxT = hoverTxT;
@@ -70,12 +68,12 @@ public class ClickableImageWidget extends ButtonWidget {
     }
 
     private boolean canHover() {
-        return this.hovered && this.hoverTxT != null;
+        return this.isHovered && this.hoverTxT != null;
     }
 
     @Override
-    protected void drawIcon(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, image,
+    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+        graphics.blit(RenderPipelines.GUI_TEXTURED, image,
                 this.getX(), this.getY(), 0.0f, 0.0f, this.getWidth(), this.getHeight(), this.getWidth(), this.getHeight());
 
         if (canHover()) {
@@ -88,17 +86,17 @@ public class ClickableImageWidget extends ButtonWidget {
             int toolTipHeight = (int)((hoverTime / MAX_TIME) * 20);
             int toolTipY = this.getTooltipY(toolTipHeight);
 
-            context.drawTexture(RenderPipelines.GUI_TEXTURED, hoverBackground,
+            graphics.blit(RenderPipelines.GUI_TEXTURED, hoverBackground,
                     getX(), toolTipY, 0.0F, 0.0F, this.getWidth(), toolTipHeight,
                     this.getWidth(), toolTipHeight);
             if (hoverTime >= MAX_TIME) {
                 assert hoverTxT != null; // cant be null because hovertime only goes up if hoverTxT is not null
                 int padding = 4;
                 int textX = getX() + padding;
-                int textY = toolTipY + (toolTipHeight - textRenderer.fontHeight) / 2;
-                context.drawText(textRenderer, hoverTxT.b(), textX, textY, 0xFFFFFF, false);
-                context.getHoverListener(this, DrawContext.HoverType.NONE)
-                        .text(hoverTxT.b(),textX, getX()+width-padding, toolTipY, getY()+this.getHeight());
+                int textY = toolTipY + (toolTipHeight - textRenderer.lineHeight) / 2;
+                graphics.text(textRenderer, hoverTxT.b(), textX, textY, 0xFFFFFF, false);
+                graphics.textRendererForWidget(this, GuiGraphicsExtractor.HoveredTextEffects.NONE)
+                        .acceptScrollingWithDefaultCenter(hoverTxT.b(),textX, getX()+width-padding, toolTipY, getY()+this.getHeight());
             }
         }
     }
@@ -106,18 +104,18 @@ public class ClickableImageWidget extends ButtonWidget {
     public static class Builder {
         private final CTxT text;
         private CTxT hoverText = null;
-        private final TextRenderer textRenderer;
+        private final Font textRenderer;
         @Nullable
-        private PressAction onPress = null;
+        private OnPress onPress = null;
         private final CustomImage image;
 
         private int x = 0;
         private int y = 0;
 
         @Nullable
-        ButtonWidget.NarrationSupplier narrationSupplier;
+        Button.CreateNarration narrationSupplier;
 
-        public Builder(CTxT text, TextRenderer textRenderer, CustomImage customImage) {
+        public Builder(CTxT text, Font textRenderer, CustomImage customImage) {
             this.text = text;
             this.textRenderer = textRenderer;
             this.image = customImage;
@@ -129,7 +127,7 @@ public class ClickableImageWidget extends ButtonWidget {
             return this;
         }
 
-        public Builder onPress(PressAction onPress) {
+        public Builder onPress(OnPress onPress) {
             this.onPress = onPress;
             return this;
         }
@@ -139,7 +137,7 @@ public class ClickableImageWidget extends ButtonWidget {
             return this;
         }
 
-        public Builder narration(NarrationSupplier narrationSupplier) {
+        public Builder narration(CreateNarration narrationSupplier) {
             this.narrationSupplier = narrationSupplier;
             return this;
         }
