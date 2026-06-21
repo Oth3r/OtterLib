@@ -76,7 +76,7 @@ public class ConfigScreen extends Screen implements SetClientScreen {
     }
 
     public void setScreen(Screen screen) {
-        this.minecraft.setScreen(screen);
+        this.minecraft.setScreenAndShow(screen);
     }
 
     @Override
@@ -118,6 +118,6 @@ public class ConfigScreen extends Screen implements SetClientScreen {
 
     @Override
     public void onClose() {
-        this.minecraft.setScreen(parent);
+        this.minecraft.setScreenAndShow(parent);
     }
 }

@@ -27,7 +27,7 @@ public class FabricTestClient implements ClientModInitializer {
         register();
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (keyBinding.consumeClick()) {
-                client.setScreen(getConfigScreen(client.screen));
+                client.setScreenAndShow(getConfigScreen(client.gui.screen()));
             }
         });
     }

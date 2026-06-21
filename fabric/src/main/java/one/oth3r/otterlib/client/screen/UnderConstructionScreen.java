@@ -93,14 +93,14 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen imp
 
         footerLayout.addChild(this.addRenderableWidget(new Button.Builder(Component.translatable("otterlib.gui.config.button.save_close"),
                 (button) -> {
-                    this.minecraft.setScreen(parent);
+                    this.minecraft.setScreenAndShow(parent);
                 }).size(140,20).build()));
 
         footerLayout.addChild(this.addRenderableWidget(new Button.Builder(Component.translatable("otterlib.gui.config.button.cancel"),
                 (button) -> {
                     this.file.load();
                     this.file.save();
-                    this.minecraft.setScreen(parent);
+                    this.minecraft.setScreenAndShow(parent);
                 }).size(140,20).build()));
     }
 
@@ -142,7 +142,7 @@ public class UnderConstructionScreen<T extends CustomFile<T>> extends Screen imp
     @Override
     public void onClose() {
         if (parent != null) {
-            this.minecraft.setScreen(parent);
+            this.minecraft.setScreenAndShow(parent);
         } else {
             super.onClose();
         }
