@@ -1,10 +1,9 @@
 package one.oth3r.otterlib.client.screen;
 
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
-import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.layouts.LinearLayout;
+import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
+import net.minecraft.network.chat.Component;
 import one.oth3r.otterlib.chat.CTxT;
 import one.oth3r.otterlib.client.screen.utl.CustomImage;
 import one.oth3r.otterlib.client.screen.utl.SimpleButton;
@@ -19,7 +18,7 @@ public class ConfigScreen extends Screen implements SetClientScreen {
     private static final int HEADER_HEIGHT = 30, FOOTER_HEIGHT = 40;
     protected final Screen parent;
 
-    public final ThreePartsLayoutWidget layout;
+    public final HeaderAndFooterLayout layout;
     protected final ClickableImageWidget customBanner;
     protected ConfigsListWidget body;
     protected List<SimpleButton> fileButtons;
@@ -37,7 +36,7 @@ public class ConfigScreen extends Screen implements SetClientScreen {
         super(title.b());
         this.parent = parent;
         this.customBanner = customBanner;
-        this.layout = new ThreePartsLayoutWidget(this,HEADER_HEIGHT+customBanner.getHeight(),FOOTER_HEIGHT);
+        this.layout = new HeaderAndFooterLayout(this,HEADER_HEIGHT+customBanner.getHeight(),FOOTER_HEIGHT);
         this.fileButtons = fileButtons;
         this.footer = footer;
     }
@@ -53,9 +52,9 @@ public class ConfigScreen extends Screen implements SetClientScreen {
     public ConfigScreen(Screen parent, @NotNull CTxT title, @NotNull CustomImage customBanner, @NotNull List<SimpleButton> fileButtons, List<SimpleButton> footer) {
         super(title.b());
         this.parent = parent;
-        this.customBanner = new ClickableImageWidget.Builder(new CTxT(Text.translatable("otterlib.gui.screen.title_image")),
-                this.textRenderer, customBanner).build();
-        this.layout = new ThreePartsLayoutWidget(this,HEADER_HEIGHT+ this.customBanner.getHeight(),FOOTER_HEIGHT);
+        this.customBanner = new ClickableImageWidget.Builder(new CTxT(Component.translatable("otterlib.gui.screen.title_image")),
+                this.font, customBanner).build();
+        this.layout = new HeaderAndFooterLayout(this,HEADER_HEIGHT+ this.customBanner.getHeight(),FOOTER_HEIGHT);
         this.fileButtons = fileButtons;
         this.footer = footer;
     }
@@ -71,37 +70,37 @@ public class ConfigScreen extends Screen implements SetClientScreen {
         super(title.b());
         this.parent = parent;
         this.customBanner = null;
-        this.layout = new ThreePartsLayoutWidget(this,HEADER_HEIGHT,FOOTER_HEIGHT);
+        this.layout = new HeaderAndFooterLayout(this,HEADER_HEIGHT,FOOTER_HEIGHT);
         this.fileButtons = fileButtons;
         this.footer = footer;
     }
 
     public void setScreen(Screen screen) {
-        this.client.setScreen(screen);
+        this.minecraft.setScreenAndShow(screen);
     }
 
     @Override
     protected void init() {
         this.initHeader();
 
-        this.body = this.layout.addBody(new ConfigsListWidget(client, this));
+        this.body = this.layout.addToContents(new ConfigsListWidget(minecraft, this));
         this.body.addAllConfigEntries(this.fileButtons.stream().map(b -> ConfigsListWidget.ConfigEntry.create(b.build(this),this.body)).collect(Collectors.toList()));
 
         // FOOTER
 
-        DirectionalLayoutWidget footerWidget = this.layout.addFooter(DirectionalLayoutWidget.horizontal().spacing(8));
-        this.footer.forEach(f -> footerWidget.add(f.build(this)));
+        LinearLayout footerWidget = this.layout.addToFooter(LinearLayout.horizontal().spacing(8));
+        this.footer.forEach(f -> footerWidget.addChild(f.build(this)));
 
 
-        this.layout.forEachChild(this::addDrawableChild);
-        this.refreshWidgetPositions();
+        this.layout.visitWidgets(this::addRenderableWidget);
+        this.repositionElements();
     }
 
     private void initHeader() {
         if (customBanner != null) {
-            this.layout.addHeader(customBanner);
+            this.layout.addToHeader(customBanner);
         } else {
-            this.layout.addHeader(this.title,this.textRenderer);
+            this.layout.addTitleHeader(this.title,this.font);
         }
     }
 
@@ -110,20 +109,15 @@ public class ConfigScreen extends Screen implements SetClientScreen {
     }
 
     @Override
-    protected void refreshWidgetPositions() {
-        this.layout.refreshPositions();
+    protected void repositionElements() {
+        this.layout.arrangeElements();
         if (this.body != null) {
-            this.body.position(this.width, this.layout);
+            this.body.updateSize(this.width, this.layout);
         }
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.render(context, mouseX, mouseY, delta);
-    }
-
-    @Override
-    public void close() {
-        this.client.setScreen(parent);
+    public void onClose() {
+        this.minecraft.setScreenAndShow(parent);
     }
 }

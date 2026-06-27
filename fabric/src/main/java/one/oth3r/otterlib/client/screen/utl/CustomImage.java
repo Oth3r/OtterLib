@@ -1,6 +1,6 @@
 package one.oth3r.otterlib.client.screen.utl;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
 
 public class CustomImage {
     protected final Identifier image;

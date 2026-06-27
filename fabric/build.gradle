@@ -1,5 +1,5 @@
 plugins {
-    id 'net.fabricmc.fabric-loom-remap'
+    id 'net.fabricmc.fabric-loom'
     id 'maven-publish'
     id "me.modmuss50.mod-publish-plugin" version "0.8.4"
     id "com.gradleup.shadow"
@@ -29,10 +29,8 @@ repositories {
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 }
 
 processResources {
@@ -52,7 +50,7 @@ processResources {
     }
 }
 
-def targetJavaVersion = 21
+def targetJavaVersion = 25
 tasks.withType(JavaCompile).configureEach {
     // ensure that the encoding is set to UTF-8, no matter what the system default is
     // this fixes some edge cases with special characters not displaying correctly
@@ -87,10 +85,10 @@ shadowJar {
     minimize()
 }
 
-remapJar {
+jar {
     dependsOn(shadowJar)
     mustRunAfter(shadowJar)
-    inputFile = file(shadowJar.archiveFile)
+    from(shadowJar)
 }
 
 // configure the maven publication
@@ -120,7 +118,7 @@ publishMods {
     changelog = file('../changelog.md').text
     type = BETA
 
-    file = remapJar.archiveFile
+    file = jar.archiveFile
     modLoaders.add("fabric")
     modLoaders.add("quilt")
 

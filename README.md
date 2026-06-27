@@ -1,3 +1,8 @@
+[![issues](https://github.com/intergrav/devins-badges/blob/c7fd18efdadd1c3f12ae56b49afd834640d2d797/assets/cozy/documentation/issues_64h.png?raw=true)](https://github.com/Oth3r/OtterLib/issues)
+[![discord](https://github.com/intergrav/devins-badges/blob/v3/assets/cozy/social/discord-singular_64h.png?raw=true)](https://www.oth3r.one/discord)
+
+[//]: # ([![localization]&#40;https://github.com/intergrav/devins-badges/blob/c7fd18efdadd1c3f12ae56b49afd834640d2d797/assets/cozy/translate/crowdin_64h.png?raw=true&#41;]&#40;&#41;)
+
 A simple library mod for minecraft, made mostly to develop my mods easier, but can be used by anyone!
 Currently supported loaders: Fabric, Spigot, & Paper
 
@@ -37,6 +42,8 @@ player.sendMessage(new CTxT("Hello").color(Color.BLUE).bold(true).strikethrough(
 
 ### 📜 Custom Language Reader
 OtterLib provides a custom language reader that allows you to easily have server-side localization on all supported loaders. There is also support for a secondary location for locales for easy player overrides.
+\
+You can use the `LanguageReg` class to register your language files, and OtterLib will handle them for you.
 
 ### 🗃️ Robust file saving and loading
 Adds an interface that enables easy config file creation with support for saving, loading, and updating versions easily.

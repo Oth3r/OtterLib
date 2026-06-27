@@ -1,5 +1,9 @@
 package one.oth3r.otterlib.chat;
 
+import one.oth3r.otterlib.Assets;
+import one.oth3r.otterlib.chat.click.ClickAction;
+import one.oth3r.otterlib.chat.hover.HoverAction;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -10,19 +14,18 @@ import java.util.stream.Collectors;
  * @param <C> the main object that is used by the modloader
  */
 public abstract class ChatText<T, C extends ChatText<T, C>> {
-    // todo add custom tag support
     protected T text;
-    protected Boolean button = false;
-    protected Color color = Color.WHITE;
+    protected Wrapper<T,C> wrapper = null;
+    protected Color color = null;
     protected ClickAction clickEvent = null;
-    protected C hoverEvent = null; // todo better way to do hovers
+    protected HoverAction<?> hoverEvent = null;
     protected Boolean bold = false;
     protected Boolean italic = false;
     protected Boolean strikethrough = false;
     protected Boolean underline = false;
     protected Boolean obfuscate = false;
     protected ArrayList<C> append = new ArrayList<>();
-    protected Rainbow rainbow = new Rainbow();
+    protected Rainbow rainbow = null;
 
     public ChatText() {
         text("");
@@ -42,7 +45,7 @@ public abstract class ChatText<T, C extends ChatText<T, C>> {
 
     public void copyFromObject(C old) {
         this.text = old.text;
-        this.button = old.button;
+        this.wrapper = old.wrapper;
         this.color = old.color;
         this.clickEvent = old.clickEvent;
         this.hoverEvent = old.hoverEvent;
@@ -50,8 +53,24 @@ public abstract class ChatText<T, C extends ChatText<T, C>> {
         this.italic = old.italic;
         this.strikethrough = old.strikethrough;
         this.underline = old.underline;
-        this.append = old.append.stream().map(ChatText::clone).collect(Collectors.toCollection(ArrayList::new));;
+        this.append = old.append.stream().map(ChatText::clone).collect(Collectors.toCollection(ArrayList::new));
         this.rainbow = old.rainbow;
+    }
+
+    /**
+     * mirrors the properties from source if the properties haven't been changed in this object.
+     * properties that are skipped are: append, button & text.
+     */
+    public void copyIfChanged(C source) {
+        if (this.color == null) this.color = source.color;
+        if (this.clickEvent == null) this.clickEvent = source.clickEvent;
+        if (this.hoverEvent == null) this.hoverEvent = source.hoverEvent;
+        if (!this.bold) this.bold = source.bold;
+        if (!this.italic) this.italic = source.italic;
+        if (!this.strikethrough) this.strikethrough = source.strikethrough;
+        if (!this.underline) this.underline = source.underline;
+        if (!this.obfuscate) this.obfuscate = source.obfuscate;
+        if (this.rainbow == null) this.rainbow = source.rainbow;
     }
 
     @Override
@@ -66,8 +85,14 @@ public abstract class ChatText<T, C extends ChatText<T, C>> {
 
     public abstract C text(C text);
 
-    public C btn(Boolean button) {
-        this.button = button;
+    public C wrapper(Wrapper<T, C> wrapper) {
+        this.wrapper = wrapper;
+        return self();
+    }
+
+    @SuppressWarnings("unchecked")
+    public C wrapper() {
+        this.wrapper = (Wrapper<T, C>) Assets.HELPER.getDefaultWrapper();
         return self();
     }
 
@@ -86,8 +111,8 @@ public abstract class ChatText<T, C extends ChatText<T, C>> {
         return self();
     }
 
-    public C hover(C hoverText) {
-        this.hoverEvent = hoverText;
+    public C hover(HoverAction<?> hoverAction) {
+        this.hoverEvent = hoverAction;
         return self();
     }
 
@@ -160,8 +185,8 @@ public abstract class ChatText<T, C extends ChatText<T, C>> {
     @Override
     public abstract String toString();
 
-    public Boolean isBtn() {
-        return button;
+    public T getText() {
+        return text;
     }
 
     public Color getColor() {
@@ -192,8 +217,12 @@ public abstract class ChatText<T, C extends ChatText<T, C>> {
         return clickEvent;
     }
 
-    public C getHover() {
+    public HoverAction<?> getHover() {
         return hoverEvent;
+    }
+
+    public ArrayList<C> getAppends() {
+        return new ArrayList<>(append);
     }
 
     public boolean isEmpty() {
