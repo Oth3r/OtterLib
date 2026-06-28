@@ -17,4 +17,24 @@ public class CTxT extends LoaderText<CTxT> {
     public CTxT(MutableComponent text) {
         super(text.copy());
     }
+
+    @Override
+    protected CTxT createText(String text) {
+        return new CTxT(text);
+    }
+
+    @Override
+    protected CTxT createText(MutableComponent text) {
+        return new CTxT(text);
+    }
+
+    @Override
+    protected CTxT createCopy(CTxT text) {
+        return new CTxT(text);
+    }
+
+    @Override
+    public CTxT clone() {
+        return new CTxT(this);
+    }
 }

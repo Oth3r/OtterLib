@@ -15,7 +15,7 @@ public interface LoaderUtilities {
      * on different loaders, different tactics are used to grab the loader's different default Text implementations
      * @return the CTxT
      */
-    <T extends LoaderText<T>> T getTxTFromObj(Object obj);
+    CTxT getCTxTFromObj(Object obj);
 
     /**
      * a method to check if OtterLib is running on the client or not

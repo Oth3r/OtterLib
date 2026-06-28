@@ -1,5 +1,7 @@
 package one.oth3r.otterlib.registry;
 
+import one.oth3r.otterlib.chat.CTxT;
+import one.oth3r.otterlib.chat.LoaderText;
 import one.oth3r.otterlib.file.LanguageReader;
 
 import java.util.HashMap;
@@ -7,7 +9,7 @@ import java.util.Map;
 
 public class LanguageReg {
     private static final String DEFAULT_LANG_ID = "main";
-    private static final Map<String, Map<String, LanguageReader>> REGISTRY = new HashMap<>();
+    private static final Map<String, Map<String, LanguageReader<?>>> REGISTRY = new HashMap<>();
 
     /**
      * Registers a LanguageReader to the registry.
@@ -16,8 +18,8 @@ public class LanguageReg {
      * @param lang the LanguageReader instance to register
      * @return true if registration was successful, false otherwise
      */
-    public static boolean registerLang(String modId, String langId, LanguageReader lang) {
-        Map<String, LanguageReader> modLangs = REGISTRY.computeIfAbsent(modId, k -> new HashMap<>());
+    public static <T extends LoaderText<T>> boolean registerLang(String modId, String langId, LanguageReader<T> lang) {
+        Map<String, LanguageReader<?>> modLangs = REGISTRY.computeIfAbsent(modId, k -> new HashMap<>());
         boolean isNew = !modLangs.containsKey(langId) || modLangs.get(langId) != lang;
         modLangs.put(langId, lang);
         return isNew;
@@ -29,7 +31,7 @@ public class LanguageReg {
      * @param lang the LanguageReader instance to register
      * @return true if registration was successful, false otherwise
      */
-    public static boolean registerLang(String modId, LanguageReader lang) {
+    public static <T extends LoaderText<T>> boolean registerLang(String modId, LanguageReader<T> lang) {
         return registerLang(modId, DEFAULT_LANG_ID, lang);
     }
 
@@ -40,7 +42,7 @@ public class LanguageReg {
      * @return true if successful, false if not
      */
     public static boolean unregisterLang(String modId, String langId) {
-        Map<String, LanguageReader> modLangs = REGISTRY.get(modId);
+        Map<String, LanguageReader<?>> modLangs = REGISTRY.get(modId);
         if (modLangs != null) {
             return modLangs.remove(langId) != null;
         }
@@ -62,12 +64,8 @@ public class LanguageReg {
      * @param langId the id of the language
      * @return the LanguageReader for the given mod and language id, or null if not found
      */
-    public static LanguageReader getLang(String modId, String langId) {
-        Map<String, LanguageReader> modLangs = REGISTRY.get(modId);
-        if (modLangs != null) {
-            return modLangs.get(langId);
-        }
-        return null;
+    public static LanguageReader<CTxT> getLang(String modId, String langId) {
+        return getLangAs(modId, langId);
     }
 
     /**
@@ -75,8 +73,32 @@ public class LanguageReg {
      * @param modId the id of the mod
      * @return the LanguageReader for the given mod and "main" language id, or null if not found
      */
-    public static LanguageReader getLang(String modId) {
+    public static LanguageReader<CTxT> getLang(String modId) {
         return getLang(modId, DEFAULT_LANG_ID);
+    }
+
+    /**
+     * Gets a typed LanguageReader from the registry using the mod id and language id.
+     * @param modId the id of the mod
+     * @param langId the id of the language
+     * @return the LanguageReader for the given mod and language id, or null if not found
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends LoaderText<T>> LanguageReader<T> getLangAs(String modId, String langId) {
+        Map<String, LanguageReader<?>> modLangs = REGISTRY.get(modId);
+        if (modLangs != null) {
+            return (LanguageReader<T>) modLangs.get(langId);
+        }
+        return null;
+    }
+
+    /**
+     * Gets a typed LanguageReader from the registry using the mod id and the default "main" language id.
+     * @param modId the id of the mod
+     * @return the LanguageReader for the given mod and "main" language id, or null if not found
+     */
+    public static <T extends LoaderText<T>> LanguageReader<T> getLangAs(String modId) {
+        return getLangAs(modId, DEFAULT_LANG_ID);
     }
 
     /**
@@ -86,7 +108,7 @@ public class LanguageReg {
      * @return true if the language is registered, false otherwise
      */
     public static boolean hasLang(String modId, String langId) {
-        Map<String, LanguageReader> modLangs = REGISTRY.get(modId);
+        Map<String, LanguageReader<?>> modLangs = REGISTRY.get(modId);
         return modLangs != null && modLangs.containsKey(langId);
     }
 

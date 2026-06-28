@@ -23,12 +23,13 @@ public class OtterHelper implements LoaderUtilities {
      * @param obj the obj to try to convert
      * @return the CTxT
      */
-    @Override @SuppressWarnings("unchecked")
-    public <T extends LoaderText<T>> T getTxTFromObj(Object obj) {
-        if (obj instanceof LoaderText<?>) return (T) new LoaderText<>(((T) obj).b());
-        else if (obj instanceof TextComponent) return (T) new LoaderText<>((TextComponent) obj);
+    @Override
+    public CTxT getCTxTFromObj(Object obj) {
+        if (obj instanceof CTxT txt) return txt.clone();
+        else if (obj instanceof LoaderText<?> txt) return new CTxT(txt.b());
+        else if (obj instanceof TextComponent) return new CTxT((TextComponent) obj);
         // else, try to convert into a string
-        else return (T) new LoaderText<>(String.valueOf(obj));
+        else return new CTxT(String.valueOf(obj));
     }
 
     /**

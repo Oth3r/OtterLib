@@ -3,6 +3,8 @@ package one.oth3r.otterlib.file;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import one.oth3r.otterlib.Assets;
+import one.oth3r.otterlib.chat.CTxT;
+import one.oth3r.otterlib.chat.LoaderTextFactory;
 import one.oth3r.otterlib.chat.LoaderText;
 
 import java.io.*;
@@ -15,16 +17,58 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class LanguageReader {
+public class LanguageReader<T extends LoaderText<T>> {
+    private static final LoaderTextFactory<CTxT> DEFAULT_TEXT_FACTORY = new LoaderTextFactory<>() {
+        @Override
+        public CTxT empty() {
+            return new CTxT();
+        }
+
+        @Override
+        public CTxT literal(String text) {
+            return new CTxT(text);
+        }
+
+        @Override
+        public CTxT fromObject(Object obj) {
+            return Assets.HELPER.getCTxTFromObj(obj);
+        }
+    };
+
     private final ResourceReader defaultResource;
     /// null if no override resource is provided, meaning no alternate config language location
     private final ResourceReader overrideResource;
     private final String defaultLanguage;
+    private final LoaderTextFactory<T> textFactory;
 
     private final Map<String, String> defaultLangMap = new HashMap<>();
     private final Map<String, String> languageMap = new HashMap<>();
 
     private String currentLanguage;
+
+    public static LanguageReader<CTxT> ctxt(ResourceReader defaultResource, ResourceReader overrideResource, String defaultLanguage, String currentLanguage) {
+        return new LanguageReader<>(defaultResource, overrideResource, defaultLanguage, currentLanguage, DEFAULT_TEXT_FACTORY);
+    }
+
+    public static LanguageReader<CTxT> ctxt(ResourceReader defaultResource, String defaultLanguage, String currentLanguage) {
+        return ctxt(defaultResource, null, defaultLanguage, currentLanguage);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends LoaderText<T>> LoaderTextFactory<T> defaultTextFactory() {
+        return (LoaderTextFactory<T>) DEFAULT_TEXT_FACTORY;
+    }
+
+    /**
+     * creates a LanguageReader using the default CTxT text factory. all language files are parsed in the `.json` format
+     * @param defaultResource the path for all base language files
+     * @param overrideResource the path for override languages (player specified config languages)
+     * @param defaultLanguage the key for the default language (e.g., en_us)
+     * @param currentLanguage the key for the current language (e.g., en_us)
+     */
+    public LanguageReader(ResourceReader defaultResource, ResourceReader overrideResource, String defaultLanguage, String currentLanguage) {
+        this(defaultResource, overrideResource, defaultLanguage, currentLanguage, defaultTextFactory());
+    }
 
     /**
      * creates a LanguageReader. all language files are parsed in the `.json` format
@@ -32,17 +76,29 @@ public class LanguageReader {
      * @param overrideResource the path for override languages (player specified config languages)
      * @param defaultLanguage the key for the default language (e.g., en_us)
      * @param currentLanguage the key for the current language (e.g., en_us)
+     * @param textFactory the factory for the text implementation returned by this reader
      */
-    public LanguageReader(ResourceReader defaultResource, ResourceReader overrideResource, String defaultLanguage, String currentLanguage) {
+    public LanguageReader(ResourceReader defaultResource, ResourceReader overrideResource, String defaultLanguage, String currentLanguage, LoaderTextFactory<T> textFactory) {
         // use a classloader instead of path
         // maybe make a custom class for this instead
         this.defaultResource = defaultResource;
         this.overrideResource = overrideResource;
         this.defaultLanguage = defaultLanguage;
         this.currentLanguage = currentLanguage;
+        this.textFactory = textFactory;
 
         // load
         load();
+    }
+
+    /**
+     * creates a LanguageReader using the default CTxT text factory. all language files are parsed in the `.json` format
+     * @param defaultResource the path for all base language files
+     * @param defaultLanguage the key for the default language (e.g., en_us)
+     * @param currentLanguage the key for the current language (e.g., en_us)
+     */
+    public LanguageReader(ResourceReader defaultResource, String defaultLanguage, String currentLanguage) {
+        this(defaultResource, null, defaultLanguage, currentLanguage);
     }
 
     /**
@@ -50,15 +106,10 @@ public class LanguageReader {
      * @param defaultResource the path for all base language files
      * @param defaultLanguage the key for the default language (e.g., en_us)
      * @param currentLanguage the key for the current language (e.g., en_us)
+     * @param textFactory the factory for the text implementation returned by this reader
      */
-    public LanguageReader(ResourceReader defaultResource, String defaultLanguage, String currentLanguage) {
-        this.defaultResource = defaultResource;
-        this.overrideResource = null;
-        this.defaultLanguage = defaultLanguage;
-        this.currentLanguage = currentLanguage;
-
-        // load
-        load();
+    public LanguageReader(ResourceReader defaultResource, String defaultLanguage, String currentLanguage, LoaderTextFactory<T> textFactory) {
+        this(defaultResource, null, defaultLanguage, currentLanguage, textFactory);
     }
 
     /**
@@ -137,15 +188,14 @@ public class LanguageReader {
     }
 
     /**
-     * retrieves a translation from the client, if on the client, and from the loaded translation if not (useful for client sided text and UI)
+     * Retrieves a translation from the client, if on the client, and from the loaded translation if not.
      * @param key the translation key
      * @param args the arguments for the translation
-     * @return the LoaderText of the translation
+     * @return the configured LoaderText implementation of the translation
      */
-    @SuppressWarnings("unchecked")
-    public <T extends LoaderText<T>> T dynamicTranslatable(String key, Object... args) {
+    public T dynamicTranslatable(String key, Object... args) {
         if (Assets.HELPER.isClient()) // client side, should attempt to use the client's language - might be different from the config language
-            return (T) Assets.HELPER.getClientTranslatable(key, args);
+            return textFactory.fromObject(Assets.HELPER.getClientTranslatable(key, args));
         else // not client side
             return translatable(key, args);
     }
@@ -155,14 +205,14 @@ public class LanguageReader {
      * if the key doesn't exist, the default language file will also be checked.
      * @param key the translation key
      * @param args the arguments for the translation
-     * @return the CTxT of the translation
+     * @return the configured LoaderText implementation of the translation
      */
-    public <T extends LoaderText<T>> T translatable(String key, Object... args) {
-        return new Parser(key,args).getTxT();
+    public T translatable(String key, Object... args) {
+        return new Parser(key,args).getTxT(textFactory);
     }
 
     /**
-     * Parses the key-arg into a formatted CTxT
+     * Parses the key-arg into a formatted LoaderText.
      */
     private class Parser {
         private final String translationKey;
@@ -173,8 +223,7 @@ public class LanguageReader {
             this.placeholders = placeholders;
         }
 
-        @SuppressWarnings("unchecked")
-        public <T extends LoaderText<T>> T getTxT() {
+        public T getTxT(LoaderTextFactory<T> textFactory) {
             String translated = getLanguageValue(translationKey);
             if (placeholders != null && placeholders.length > 0) {
                 //removed all double \\ and replaces with \
@@ -199,7 +248,7 @@ public class LanguageReader {
                 }
                 //if there are placeholders specified, and the split is more than 1, it will replace %(dfs) with the placeholder objects
                 if (parts.length > 1) {
-                    T txt = (T) new LoaderText<>();
+                    T txt = textFactory.empty();
                     int i = 0;
                     for (String match : matches) {
                         int get = i;
@@ -210,14 +259,14 @@ public class LanguageReader {
                         }
                         if (parts.length != i) txt.append(parts[i]);
                         //convert the obj into txt
-                        txt.append((T) Assets.HELPER.getTxTFromObj(placeholders[get]));
+                        txt.append(textFactory.fromObject(placeholders[get]));
                         i++;
                     }
                     if (parts.length != i) txt.append(parts[i]);
-                    return (T) new LoaderText<>(txt);
+                    return textFactory.copy(txt);
                 }
             }
-            return (T) new LoaderText<>(translated);
+            return textFactory.literal(translated);
         }
     }
 }

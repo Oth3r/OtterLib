@@ -2,8 +2,8 @@ package one.oth3r.otterlib.chat;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 
 public class Rainbow {
     protected boolean enabled = false;
@@ -80,26 +80,25 @@ public class Rainbow {
         this.saturation = saturation;
     }
 
-    /**
-     * makes a string rainbow using the variables in the Rainbow class
-     * @return a colorized rainbow string as a CTxT ArrayList<>
-     */
-    @SuppressWarnings("unchecked")
-    public <T extends LoaderText<T>> ArrayList<LoaderText<T>> colorize(String target) {
+    public <T extends LoaderText<T>> ArrayList<T> colorize(String target, Function<String, T> textFactory) {
         // if not enabled, don't send a string
-        if (!enabled) return new ArrayList<>(List.of(new LoaderText<>(target)));
+        if (!enabled) {
+            ArrayList<T> text = new ArrayList<>();
+            text.add(textFactory.apply(target));
+            return text;
+        }
 
         // get the hue as the position
         float hue = position;
 
         // create the TxT to add too
-        ArrayList<LoaderText<T>> rainbow = new ArrayList<>();
+        ArrayList<T> rainbow = new ArrayList<>();
 
         // loop for the text length
         for (int i = 0; i < target.codePointCount(0, target.length()); i++) {
             // if empty, skip
             if (target.charAt(i) == ' ') {
-                rainbow.add((LoaderText<T>) new LoaderText<>(" ").rainbow(null));
+                rainbow.add(textFactory.apply(" ").rainbow(null));
                 continue;
             }
 
@@ -107,7 +106,7 @@ public class Rainbow {
             Color color = Color.getHSBColor(hue / 360.0f, saturation, brightness);
 
             // set a null rainbow so it doesn't get overwritten when copy changed methods runs
-            T letter = (T) new LoaderText<>(Character.toString(target.codePointAt(i)))
+            T letter = textFactory.apply(Character.toString(target.codePointAt(i)))
                     .color(color).rainbow(null);
             rainbow.add(letter);
 

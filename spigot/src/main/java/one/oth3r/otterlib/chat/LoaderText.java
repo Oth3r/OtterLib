@@ -15,7 +15,7 @@ import java.net.URISyntaxException;
  * Generic loader text for spigot
  * @param <T> the type of the text
  */
-public class LoaderText<T extends LoaderText<T>> extends ChatText<TextComponent, T> {
+public abstract class LoaderText<T extends LoaderText<T>> extends ChatText<TextComponent, T> {
     public LoaderText() {
         super();
     }
@@ -32,9 +32,15 @@ public class LoaderText<T extends LoaderText<T>> extends ChatText<TextComponent,
         super(text.duplicate());
     }
 
-    @Override @SuppressWarnings("unchecked")
+    protected abstract T createText(String text);
+
+    protected abstract T createText(TextComponent text);
+
+    protected abstract T createCopy(T text);
+
+    @Override
     public T clone() {
-        return (T) new LoaderText<>((T) this);
+        return createCopy(self());
     }
 
     @Override @SuppressWarnings("unchecked")
@@ -55,16 +61,16 @@ public class LoaderText<T extends LoaderText<T>> extends ChatText<TextComponent,
         return (T) this;
     }
 
-    @Override @SuppressWarnings("unchecked")
+    @Override
     public T append(String append) {
-        this.append.add((T) new LoaderText<>(append));
-        return (T) this;
+        this.append.add(createText(append));
+        return self();
     }
 
-    @Override @SuppressWarnings("unchecked")
+    @Override
     public T append(TextComponent append) {
-        this.append.add((T) new LoaderText<>(append));
-        return (T) this;
+        this.append.add(createText(append));
+        return self();
     }
 
     private ClickEvent getClickEvent() {
@@ -99,10 +105,16 @@ public class LoaderText<T extends LoaderText<T>> extends ChatText<TextComponent,
         return null;
     }
 
-    private void applyStyle(TextComponent tc) {
-        if (this.color != null) tc.setColor(ChatColor.of(this.color));
+    /**
+     * applies styles to the provided text component
+     * @param tc the text component to apply styles to
+     * @param wrapper if the text component provided is part of the wrapper or not (skip extra styles)
+     */
+    private void applyStyle(TextComponent tc, boolean wrapper) {
         tc.setClickEvent(getClickEvent());
         tc.setHoverEvent(getHoverEvent());
+        if (wrapper) return;
+        if (this.color != null) tc.setColor(ChatColor.of(this.color));
         tc.setItalic(this.italic);
         tc.setBold(this.bold);
         tc.setStrikethrough(this.strikethrough);
@@ -114,27 +126,27 @@ public class LoaderText<T extends LoaderText<T>> extends ChatText<TextComponent,
         TextComponent output = new TextComponent();
         
         if (this.wrapper != null) {
-            TextComponent frontBracket = new TextComponent("[");
-            applyStyle(frontBracket);
+            TextComponent frontBracket = this.wrapper.front().b();
+            applyStyle(frontBracket, true);
             output.addExtra(frontBracket);
         }
 
         if (this.rainbow != null && this.rainbow.isEnabled()) {
-            this.rainbow.colorize(text.toPlainText()).forEach(textComponent -> {
+            this.rainbow.colorize(text.toPlainText(), this::createText).forEach(textComponent -> {
                 TextComponent tc = textComponent.b();
-                applyStyle(tc);
+                applyStyle(tc,false);
                 output.addExtra(tc);
             });
         } else {
             TextComponent tc = this.text.duplicate();
-            applyStyle(tc);
+            applyStyle(tc, false);
             output.addExtra(tc);
         }
 
         if (this.wrapper != null) {
-            TextComponent backBracket = new TextComponent("]");
-            applyStyle(backBracket);
-            output.addExtra(backBracket);
+            TextComponent backBracket = wrapper.back().b();
+            applyStyle(backBracket, true);
+            output.addExtra(wrapper.back().b());
         }
 
         for (LoaderText<T> txt : this.append) {

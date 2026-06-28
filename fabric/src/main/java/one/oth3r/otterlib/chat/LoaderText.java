@@ -13,7 +13,7 @@ import java.awt.*;
 import java.net.URI;
 import java.util.function.UnaryOperator;
 
-public class LoaderText<T extends LoaderText<T>> extends ChatText<MutableComponent, T> {
+public abstract class LoaderText<T extends LoaderText<T>> extends ChatText<MutableComponent, T> {
     public LoaderText() {
         super();
     }
@@ -30,9 +30,15 @@ public class LoaderText<T extends LoaderText<T>> extends ChatText<MutableCompone
         super(text);
     }
 
-    @Override @SuppressWarnings("unchecked")
+    protected abstract T createText(String text);
+
+    protected abstract T createText(MutableComponent text);
+
+    protected abstract T createCopy(T text);
+
+    @Override
     public T clone() {
-        return (T) new LoaderText<>((T) this);
+        return createCopy(self());
     }
 
     @Override @SuppressWarnings("unchecked")
@@ -58,16 +64,16 @@ public class LoaderText<T extends LoaderText<T>> extends ChatText<MutableCompone
         return (T) this;
     }
 
-    @Override @SuppressWarnings("unchecked")
+    @Override
     public T append(String append) {
-        this.append.add((T) new LoaderText<>(append));
-        return (T) this;
+        this.append.add(createText(append));
+        return self();
     }
 
-    @Override @SuppressWarnings("unchecked")
+    @Override
     public T append(MutableComponent append) {
-        this.append.add((T) new LoaderText<>(append));
-        return (T) this;
+        this.append.add(createText(append));
+        return self();
     }
 
     private ClickEvent getClickEvent() {
@@ -111,7 +117,7 @@ public class LoaderText<T extends LoaderText<T>> extends ChatText<MutableCompone
         }
 
         if (this.rainbow != null && this.rainbow.isEnabled()) {
-            this.rainbow.colorize(text.getString()).forEach(text -> output.append(text.b().withStyle(styleUpdater)));
+            this.rainbow.colorize(text.getString(), this::createText).forEach(text -> output.append(text.b().withStyle(styleUpdater)));
         } else {
             output.append(this.text.withStyle(styleUpdater));
         }

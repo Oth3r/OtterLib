@@ -20,6 +20,21 @@ public class CTxT extends LoaderText<CTxT> {
     }
 
     @Override
+    protected CTxT createText(String text) {
+        return new CTxT(text);
+    }
+
+    @Override
+    protected CTxT createText(TextComponent text) {
+        return new CTxT(text);
+    }
+
+    @Override
+    protected CTxT createCopy(CTxT text) {
+        return new CTxT(text);
+    }
+
+    @Override
     public CTxT clone() {
         return new CTxT(this);
     }
