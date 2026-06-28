@@ -4,5 +4,5 @@ website: https://github.com/Oth3r/OtterLib
 version: '${version}'
 author: "Oth3r"
 main: one.oth3r.otterlib.OtterLib
-api-version: 1.20
+api-version: 26.1
 load: STARTUP
