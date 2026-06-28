@@ -70,10 +70,10 @@ jar {
 
 //build in testing server dir
 tasks.register('buildAndMoveJar', Jar) {
-    archiveBaseName.set("otterlib-test-paper-dev")
+    archiveBaseName.set("otterlib-paper-test")
     version = "0"
     from(sourceSets.main.output)
 
-    destinationDirectory.set(file("/mnt/1TBM2/Minecraft/Servers/Paper/Latest/plugins"))
-//    destinationDirectory.set(file("R:/Minecraft/Servers/Paper/Latest/plugins"))
+    destinationDirectory.set(file(env.fetchOrNull('LINUX_MOUNT')+"Minecraft/Servers/Paper/Latest/plugins"))
+//    destinationDirectory.set(file("R:/Minecraft/Servers/Spigot/Latest/plugins"))
 }

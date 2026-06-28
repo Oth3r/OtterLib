@@ -38,7 +38,7 @@ dependencies {
     compileOnly ("org.spigotmc:spigot-api:${project.minecraft_version}-R0.1-SNAPSHOT")
 }
 
-def targetJavaVersion = 17
+def targetJavaVersion = 21
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion
@@ -102,7 +102,7 @@ tasks.register('buildAndMoveJar', Jar) {
     version = "0"
     from(sourceSets.main.output)
 
-    destinationDirectory.set(file("/mnt/1TBM2/Minecraft/Servers/Spigot/Latest/plugins"))
+    destinationDirectory.set(file(env.fetchOrNull('LINUX_MOUNT')+"Minecraft/Servers/Spigot/Latest/plugins"))
 //    destinationDirectory.set(file("R:/Minecraft/Servers/Spigot/Latest/plugins"))
 }
 
@@ -113,8 +113,8 @@ publishMods {
     file = shadowJar.archiveFile
     modLoaders.add("spigot")
 
-    version = spigot_version
-    displayName = spigot_version+" [Spigot]"
+    version = mod_version
+    displayName = mod_version+" [Spigot]"
 
     modrinth {
         accessToken = env.fetchOrNull('MODRINTH')
