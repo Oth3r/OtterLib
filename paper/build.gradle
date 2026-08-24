@@ -9,6 +9,10 @@ plugins {
 version = "${project.mod_version}-paper"
 group = project.maven_group
 
+base {
+    archivesName = project.file_name
+}
+
 repositories {
     mavenCentral()
     maven {
@@ -86,6 +90,7 @@ publishing {
 
 
 shadowJar {
+    archiveFileName.set("${project.file_name}-${project.version}.jar")
     from sourceSets.main.output
     configurations = [project.configurations.shadow]
     minimize()
